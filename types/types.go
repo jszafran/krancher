@@ -8,11 +8,6 @@ const (
 	Demography            = "demography"
 )
 
-const (
-	Direct FilterType = "direct"
-	Rollup            = "rollup"
-)
-
 type Column struct {
 	Name     string     `json:"name,omitempty"`
 	Text     string     `json:"text,omitempty"`

@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	p := "resources/example_schema.json"
+	p := "resources/example_schema.jsozn"
 	sch := kio.SchemaFromJSON(p)
 	fmt.Println(sch)
 }

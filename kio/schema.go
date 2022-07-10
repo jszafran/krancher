@@ -11,12 +11,11 @@ import (
 func SchemaFromJSON(path string) types.Schema {
 	// TODO: research what is idiomatic way of handling multiple errors in one func?
 	jsonFile, err1 := os.Open(path)
+	var schema types.Schema
 
 	if err1 != nil {
 		log.Fatal(err1)
 	}
-
-	var schema types.Schema
 
 	bytes, err2 := ioutil.ReadAll(jsonFile)
 
