@@ -17,14 +17,6 @@
       "of_type": "question"
     },
     {
-      "name": "Q3",
-      "text": "Question 3",
-      "min_value": 1,
-      "max_value": 3,
-      "nullable": true,
-      "of_type": "question"
-    },
-    {
       "name": "D1",
       "text": "Demography 1",
       "min_value": 1,
