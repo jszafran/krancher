@@ -63,7 +63,6 @@ func buildIndex(org OrgStructure, dataNodes []string) orgNodeIndex {
 				} else {
 					l.directEnd++
 				}
-				continue
 			}
 
 		}
