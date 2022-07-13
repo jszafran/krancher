@@ -2,7 +2,6 @@ package types
 
 import (
 	"encoding/csv"
-	"fmt"
 	"os"
 	"sort"
 )
@@ -43,18 +42,7 @@ func buildIndex(org OrgStructure, dataNodes []string) orgNodeIndex {
 	for _, node := range org.nodes {
 		l := newLoc()
 		for i, dataNode := range dataNodes {
-			fmt.Println(node, dataNode)
 			if len(node) > len(dataNode) {
-				continue
-			}
-			// direct match
-			if node == dataNode {
-				if l.directStart == -1 {
-					l.directStart = i
-					l.directEnd = i
-				} else {
-					l.directEnd++
-				}
 				continue
 			}
 			// rollup match
@@ -66,6 +54,18 @@ func buildIndex(org OrgStructure, dataNodes []string) orgNodeIndex {
 					l.rollupEnd++
 				}
 			}
+
+			// direct match
+			if node == dataNode {
+				if l.directStart == -1 {
+					l.directStart = i
+					l.directEnd = i
+				} else {
+					l.directEnd++
+				}
+				continue
+			}
+
 		}
 		ixData[node] = l
 	}
