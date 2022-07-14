@@ -8,6 +8,7 @@ import (
 
 type Survey struct {
 	schema Schema
+	index  orgNodeIndex
 }
 
 type loc struct {
@@ -85,6 +86,13 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) Survey {
 	sort.SliceStable(data, func(i, j int) bool {
 		return data[i][orgIx] < data[j][orgIx]
 	})
+	dataNodes := make([]string, 0)
+
+	for _, row := range data {
+		dataNodes = append(dataNodes, row[nmToIx["org"]])
+	}
+
+	_ = buildIndex(org, dataNodes)
 
 	return Survey{}
 }
