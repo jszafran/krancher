@@ -2,8 +2,12 @@ package types
 
 import (
 	"encoding/csv"
+	"log"
+	"math"
 	"os"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 type Survey struct {
@@ -84,7 +88,23 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) Survey {
 	data := lines[1:]
 
 	sort.SliceStable(data, func(i, j int) bool {
-		return data[i][orgIx] < data[j][orgIx]
+		str1 := strings.Replace(data[i][orgIx], "N", "", 0)
+		str2 := strings.Replace(data[j][orgIx], "N", "", 0)
+		spl1 := strings.Split(str1, ".")
+		spl2 := strings.Split(str2, ",")
+		mlen := int(math.Min(float64(len(spl1)), float64(len(spl2))))
+		for i := 0; i < mlen; i++ {
+			n1, err1 := strconv.Atoi(spl1[i])
+			n2, err2 := strconv.Atoi(spl2[i])
+			if err1 != nil || err2 != nil {
+				log.Fatalf("Failed to convert values %v or %v to int.", spl1[i], spl2[i])
+			}
+			if n1 == n2 {
+				continue
+			}
+			return n1 < n2
+		}
+		return false
 	})
 	dataNodes := make([]string, 0)
 
