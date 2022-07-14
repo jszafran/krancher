@@ -1,12 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"krancher/kio"
-)
+import "krancher/types"
 
 func main() {
-	p := "resources/example_schema.jsozn"
-	sch := kio.SchemaFromJSON(p)
-	fmt.Println(sch)
+	types.RunBenchmark("resources/bigger_org_structure.csv", "resources/data_nodes.csv")
 }
