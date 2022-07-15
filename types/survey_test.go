@@ -37,3 +37,38 @@ func TestSurvey_BuildIndex(t *testing.T) {
 		t.Fatalf("Got %v, expected %v", got, want)
 	}
 }
+
+func Test_sortDataByOrgNode(t *testing.T) {
+	type test struct {
+		input    [][]string
+		expected [][]string
+	}
+
+	r1 := []string{"N01.", "A"}
+	r2 := []string{"N01.100.", "B"}
+	r3 := []string{"N01.02.", "C"}
+	r4 := []string{"N01.02.222", "D"}
+	r5 := []string{"N01.10.", "E"}
+	r6 := []string{"N01.10.10.", "F"}
+	r7 := []string{"N04.01.", "G"}
+
+	tests := []test{
+		test{[][]string{r7, r1}, [][]string{r1, r7}},
+		test{[][]string{r3, r1, r2}, [][]string{r1, r2, r3}},
+		test{[][]string{r4, r5, r1}, [][]string{r1, r5, r4}},
+		test{[][]string{r6, r1}, [][]string{r1, r6}},
+	}
+
+	for _, test := range tests {
+		got, err := sortDataByOrgNode(test.input, 0)
+		want := test.expected
+
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Fatalf("Expected %v, got %v", want, got)
+		}
+	}
+}
