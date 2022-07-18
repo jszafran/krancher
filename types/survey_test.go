@@ -54,8 +54,8 @@ func Test_sortDataByOrgNode(t *testing.T) {
 
 	tests := []test{
 		test{[][]string{r7, r1}, [][]string{r1, r7}},
-		test{[][]string{r3, r1, r2}, [][]string{r1, r2, r3}},
-		test{[][]string{r4, r5, r1}, [][]string{r1, r5, r4}},
+		test{[][]string{r3, r1, r2}, [][]string{r1, r3, r2}},
+		test{[][]string{r4, r5, r1}, [][]string{r1, r4, r5}},
 		test{[][]string{r6, r1}, [][]string{r1, r6}},
 	}
 

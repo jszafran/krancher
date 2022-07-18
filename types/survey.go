@@ -111,7 +111,7 @@ func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {
 			}
 			return n1[i] < n2[i]
 		}
-		return false
+		return true
 	})
 	return data, nil
 }
