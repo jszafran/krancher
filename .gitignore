@@ -120,3 +120,5 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/go,goland+all
 
 .DS_Store
+
+resources/data_nodes*x.csv
