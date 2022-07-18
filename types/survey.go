@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/csv"
 	"errors"
+	"fmt"
 	"log"
 	"math"
 	"os"
@@ -12,8 +13,10 @@ import (
 )
 
 type Survey struct {
-	schema Schema
-	index  orgNodeIndex
+	schema          Schema
+	index           orgNodeIndex
+	answersData     map[string][]*int
+	demographicData map[string][]*int
 }
 
 type loc struct {
@@ -114,6 +117,33 @@ func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {
 		return true
 	})
 	return data, nil
+}
+
+func parseColumnsData(data [][]string, codes []string, nmToIxMap map[string]int) (map[string][]*int, error) {
+	parsedData := make(map[string][]*int, 0)
+	for _, row := range data {
+		for _, code := range codes {
+			ix, ok := nmToIxMap[code]
+			if !ok {
+				return nil, errors.New(fmt.Sprintf("failed to find %s in the name to column index map", code))
+			}
+
+			var v *int
+			rawVal := row[ix]
+
+			if rawVal == "" {
+				parsedData[code] = append(parsedData[code], v)
+				continue
+			}
+
+			parsedInt, err := strconv.Atoi(rawVal)
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("failed to parse %s as int", rawVal))
+			}
+			parsedData[code] = append(parsedData[code], &parsedInt)
+		}
+	}
+	return parsedData, nil
 }
 
 func NewSurvey(dataPath string, s Schema, org OrgStructure) Survey {
