@@ -1,0 +1,967 @@
+{
+    "org_nodes_column": {
+        "name": "org"
+    },
+    "columns": [
+        {
+            "name": "Q1",
+            "text": "Q1",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q2",
+            "text": "Q2",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q3",
+            "text": "Q3",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q4",
+            "text": "Q4",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q5",
+            "text": "Q5",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q6",
+            "text": "Q6",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q7",
+            "text": "Q7",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q8",
+            "text": "Q8",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q9",
+            "text": "Q9",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q10",
+            "text": "Q10",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q11",
+            "text": "Q11",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q12",
+            "text": "Q12",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q13",
+            "text": "Q13",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q14",
+            "text": "Q14",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q15",
+            "text": "Q15",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q16",
+            "text": "Q16",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q17",
+            "text": "Q17",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q18",
+            "text": "Q18",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q19",
+            "text": "Q19",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q20",
+            "text": "Q20",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q21",
+            "text": "Q21",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q22",
+            "text": "Q22",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q23",
+            "text": "Q23",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q24",
+            "text": "Q24",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q25",
+            "text": "Q25",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q26",
+            "text": "Q26",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q27",
+            "text": "Q27",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q28",
+            "text": "Q28",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q29",
+            "text": "Q29",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q30",
+            "text": "Q30",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q31",
+            "text": "Q31",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q32",
+            "text": "Q32",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q33",
+            "text": "Q33",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q34",
+            "text": "Q34",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q35",
+            "text": "Q35",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q36",
+            "text": "Q36",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q37",
+            "text": "Q37",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q38",
+            "text": "Q38",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q39",
+            "text": "Q39",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q40",
+            "text": "Q40",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q41",
+            "text": "Q41",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q42",
+            "text": "Q42",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q43",
+            "text": "Q43",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q44",
+            "text": "Q44",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q45",
+            "text": "Q45",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q46",
+            "text": "Q46",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q47",
+            "text": "Q47",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q48",
+            "text": "Q48",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q49",
+            "text": "Q49",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q50",
+            "text": "Q50",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q51",
+            "text": "Q51",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q52",
+            "text": "Q52",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q53",
+            "text": "Q53",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q54",
+            "text": "Q54",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q55",
+            "text": "Q55",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q56",
+            "text": "Q56",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q57",
+            "text": "Q57",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q58",
+            "text": "Q58",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q59",
+            "text": "Q59",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q60",
+            "text": "Q60",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q61",
+            "text": "Q61",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q62",
+            "text": "Q62",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q63",
+            "text": "Q63",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q64",
+            "text": "Q64",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q65",
+            "text": "Q65",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q66",
+            "text": "Q66",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q67",
+            "text": "Q67",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q68",
+            "text": "Q68",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q69",
+            "text": "Q69",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q70",
+            "text": "Q70",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q71",
+            "text": "Q71",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q72",
+            "text": "Q72",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q73",
+            "text": "Q73",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q74",
+            "text": "Q74",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q75",
+            "text": "Q75",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q76",
+            "text": "Q76",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q77",
+            "text": "Q77",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q78",
+            "text": "Q78",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q79",
+            "text": "Q79",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q80",
+            "text": "Q80",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q81",
+            "text": "Q81",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q82",
+            "text": "Q82",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q83",
+            "text": "Q83",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q84",
+            "text": "Q84",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q85",
+            "text": "Q85",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q86",
+            "text": "Q86",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q87",
+            "text": "Q87",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q88",
+            "text": "Q88",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q89",
+            "text": "Q89",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q90",
+            "text": "Q90",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q91",
+            "text": "Q91",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q92",
+            "text": "Q92",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q93",
+            "text": "Q93",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q94",
+            "text": "Q94",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q95",
+            "text": "Q95",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q96",
+            "text": "Q96",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q97",
+            "text": "Q97",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q98",
+            "text": "Q98",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q99",
+            "text": "Q99",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "Q100",
+            "text": "Q100",
+            "min_value": 1,
+            "max_value": 6,
+            "nullable": true,
+            "of_type": "question"
+        },
+        {
+            "name": "D1",
+            "text": "D1",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D2",
+            "text": "D2",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D3",
+            "text": "D3",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D4",
+            "text": "D4",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D5",
+            "text": "D5",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D6",
+            "text": "D6",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D7",
+            "text": "D7",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D8",
+            "text": "D8",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D9",
+            "text": "D9",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D10",
+            "text": "D10",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D11",
+            "text": "D11",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D12",
+            "text": "D12",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D13",
+            "text": "D13",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D14",
+            "text": "D14",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D15",
+            "text": "D15",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D16",
+            "text": "D16",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D17",
+            "text": "D17",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D18",
+            "text": "D18",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D19",
+            "text": "D19",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        },
+        {
+            "name": "D20",
+            "text": "D20",
+            "min_value": 1,
+            "max_value": 10,
+            "nullable": true,
+            "of_type": "demography"
+        }
+    ]
+}

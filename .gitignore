@@ -122,3 +122,5 @@ fabric.properties
 .DS_Store
 
 resources/data_nodes*x.csv
+
+resources/*big_survey*

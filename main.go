@@ -16,9 +16,9 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(sInt)
-	schema := kio.SchemaFromJSON("resources/example_schema.json")
+	schema := kio.SchemaFromJSON("resources/big_schema.json")
 	orgStructure := types.ReadOrgStructureFromCSV("resources/fake_org.csv", false)
-	survey, err := types.NewSurvey("resources/fake_data.csv", schema, orgStructure)
+	survey, err := types.NewSurvey("resources/fake_big_data.csv", schema, orgStructure)
 
 	for _, x := range schema.Columns {
 		fmt.Println(x)

@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Survey struct {
@@ -165,8 +166,10 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
 	defer file.Close()
 
 	csvReader := csv.NewReader(file)
-	lines, _ := csvReader.ReadAll()
-
+	lines, err := csvReader.ReadAll()
+	if err != nil {
+		log.Fatal(err)
+	}
 	nmToIx, _ := buildHeaderColumnMaps(lines[0])
 	orgIx := nmToIx[s.OrgNodesColumn.Name]
 	data, _ := sortDataByOrgNode(lines[1:], orgIx)
@@ -178,16 +181,20 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
 	}
 
 	_ = buildIndex(org, dataNodes)
-	fmt.Println(s.GetDemographicsCodes())
-	demogs, err := parseColumnsData(data, s.GetDemographicsCodes(), nmToIx)
-	qstAnswers, err1 := parseColumnsData(data, s.GetQuestionsCodes(), nmToIx)
-	if err != nil || err1 != nil {
+
+	demogsStart := time.Now()
+	_, err1 := parseColumnsData(data, s.GetDemographicsCodes(), nmToIx)
+	qstStart := time.Now()
+	demogsTotalTime := time.Since(demogsStart)
+	_, err2 := parseColumnsData(data, s.GetQuestionsCodes(), nmToIx)
+	qstTotalTime := time.Since(qstStart)
+	totalTime := time.Since(demogsStart)
+	if err1 != nil || err2 != nil {
 		return Survey{}, err
 	}
-	fmt.Println(demogs)
-	fmt.Println(qstAnswers)
-	for i, _ := range data {
-		fmt.Println(data[i][0])
-	}
+	fmt.Printf("Reading demogs took %s\n", demogsTotalTime)
+	fmt.Printf("Reading questions took %s\n", qstTotalTime)
+	fmt.Printf("Total time for parsing questions + demogs: %s\n", totalTime)
+
 	return Survey{}, nil
 }
