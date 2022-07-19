@@ -52,11 +52,14 @@ func Test_sortDataByOrgNode(t *testing.T) {
 	r6 := []string{"N01.10.10.", "F"}
 	r7 := []string{"N04.01.", "G"}
 
+	shuffled := [][]string{{"N02."}, {"N03.01."}, {"N01.01.03."}, {"N01."}, {"N03."}, {"N01.02.02."}, {"N01.01."}, {"N01.01.02."}, {"N01.02."}, {"N01.01.01."}, {"N01.02.01."}, {"N03.02."}}
+	expected := [][]string{{"N01."}, {"N01.01."}, {"N01.01.01."}, {"N01.01.02."}, {"N01.01.03."}, {"N01.02."}, {"N01.02.01."}, {"N01.02.02."}, {"N02."}, {"N03."}, {"N03.01."}, {"N03.02."}}
 	tests := []test{
 		test{[][]string{r7, r1}, [][]string{r1, r7}},
 		test{[][]string{r3, r1, r2}, [][]string{r1, r3, r2}},
 		test{[][]string{r4, r5, r1}, [][]string{r1, r4, r5}},
 		test{[][]string{r6, r1}, [][]string{r1, r6}},
+		test{shuffled, expected},
 	}
 
 	for _, test := range tests {

@@ -98,6 +98,18 @@ func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {
 		return nodeInts, nil
 	}
 
+	slicesOfIntEqual := func(s1 []int, s2 []int) bool {
+		if len(s1) != len(s2) {
+			return false
+		}
+		for i, v1 := range s1 {
+			if v1 != s2[i] {
+				return false
+			}
+		}
+		return true
+	}
+
 	sort.SliceStable(data, func(i, j int) bool {
 		n1, err1 := parseNode(data[i][orgColIx])
 		n2, err2 := parseNode(data[j][orgColIx])
@@ -108,11 +120,14 @@ func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {
 			log.Fatal(err2)
 		}
 		minLen := int(math.Min(float64(len(n1)), float64(len(n2))))
-		for i := 0; i < minLen; i++ {
-			if n1[i] == n2[i] {
-				continue
+		if slicesOfIntEqual(n1[:minLen], n2[:minLen]) {
+			return len(n1) < len(n2)
+		}
+		for x := 0; x < minLen; x++ {
+			if n1[x] == n2[x] {
+			} else {
+				return n1[x] < n2[x]
 			}
-			return n1[i] < n2[i]
 		}
 		return true
 	})
@@ -159,7 +174,7 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
 	dataNodes := make([]string, 0)
 
 	for _, row := range data {
-		dataNodes = append(dataNodes, row[nmToIx[s.OrgNodesColumn.Name]])
+		dataNodes = append(dataNodes, row[orgIx])
 	}
 
 	_ = buildIndex(org, dataNodes)
@@ -171,5 +186,8 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
 	}
 	fmt.Println(demogs)
 	fmt.Println(qstAnswers)
+	for i, _ := range data {
+		fmt.Println(data[i][0])
+	}
 	return Survey{}, nil
 }
