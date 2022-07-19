@@ -20,6 +20,7 @@ func RunBenchmark(orgNodesPath string, dataNodesPath string) {
 	defer f.Close()
 	csvReader := csv.NewReader(f)
 	lines, _ := csvReader.ReadAll()
+	fmt.Printf("Benchmark will be ran on %d rows of data", len(lines)-1)
 	for _, line := range lines {
 		dataNodes = append(dataNodes, line[0])
 	}
@@ -49,7 +50,6 @@ func RunBenchmark(orgNodesPath string, dataNodesPath string) {
 			return n1 < n2
 		}
 		return false
-		//return data[i][orgIx] < data[j][orgIx]
 	})
 	sortingElapsed := time.Since(sortStartTime)
 	indexBuildStartTime := time.Now()

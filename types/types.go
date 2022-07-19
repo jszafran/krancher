@@ -46,7 +46,7 @@ func (s *Schema) GetDemographicsColumns() []Column {
 
 func (s *Schema) getNames(ct ColumnType) []string {
 	codes := make([]string, 0)
-	for _, c := range filterColumnsByType(s, Question) {
+	for _, c := range filterColumnsByType(s, ct) {
 		codes = append(codes, c.Name)
 	}
 	return codes

@@ -119,8 +119,8 @@ func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {
 	return data, nil
 }
 
-func parseColumnsData(data [][]string, codes []string, nmToIxMap map[string]int) (map[string][]*int, error) {
-	parsedData := make(map[string][]*int, 0)
+func parseColumnsData(data [][]string, codes []string, nmToIxMap map[string]int) (map[string][]int, error) {
+	parsedData := make(map[string][]int, 0)
 	for _, row := range data {
 		for _, code := range codes {
 			ix, ok := nmToIxMap[code]
@@ -128,25 +128,24 @@ func parseColumnsData(data [][]string, codes []string, nmToIxMap map[string]int)
 				return nil, errors.New(fmt.Sprintf("failed to find %s in the name to column index map", code))
 			}
 
-			var v *int
 			rawVal := row[ix]
 
 			if rawVal == "" {
-				parsedData[code] = append(parsedData[code], v)
+				parsedData[code] = append(parsedData[code], -1)
 				continue
 			}
-
-			parsedInt, err := strconv.Atoi(rawVal)
+			parsedFloat, err := strconv.ParseFloat(rawVal, 64)
+			parsedInt := int(parsedFloat)
 			if err != nil {
-				return nil, errors.New(fmt.Sprintf("failed to parse %s as int", rawVal))
+				return nil, errors.New(fmt.Sprintf("Failed when converting %s to float", rawVal))
 			}
-			parsedData[code] = append(parsedData[code], &parsedInt)
+			parsedData[code] = append(parsedData[code], parsedInt)
 		}
 	}
 	return parsedData, nil
 }
 
-func NewSurvey(dataPath string, s Schema, org OrgStructure) Survey {
+func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
 	file, _ := os.Open(dataPath)
 	defer file.Close()
 
@@ -160,10 +159,17 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) Survey {
 	dataNodes := make([]string, 0)
 
 	for _, row := range data {
-		dataNodes = append(dataNodes, row[nmToIx["org"]])
+		dataNodes = append(dataNodes, row[nmToIx[s.OrgNodesColumn.Name]])
 	}
 
 	_ = buildIndex(org, dataNodes)
-
-	return Survey{}
+	fmt.Println(s.GetDemographicsCodes())
+	demogs, err := parseColumnsData(data, s.GetDemographicsCodes(), nmToIx)
+	qstAnswers, err1 := parseColumnsData(data, s.GetQuestionsCodes(), nmToIx)
+	if err != nil || err1 != nil {
+		return Survey{}, err
+	}
+	fmt.Println(demogs)
+	fmt.Println(qstAnswers)
+	return Survey{}, nil
 }

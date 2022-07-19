@@ -12,15 +12,23 @@
       "name": "Q2",
       "text": "Question 2",
       "min_value": 1,
-      "max_value": 5,
-      "nullable": false,
+      "max_value": 6,
+      "nullable": true,
+      "of_type": "question"
+    },
+    {
+      "name": "Q3",
+      "text": "Question 3",
+      "min_value": 1,
+      "max_value": 6,
+      "nullable": true,
       "of_type": "question"
     },
     {
       "name": "D1",
       "text": "Demography 1",
       "min_value": 1,
-      "max_value": 6,
+      "max_value": 10,
       "nullable": true,
       "of_type": "demography"
     },
@@ -28,7 +36,7 @@
       "name": "D2",
       "text": "Demography 2",
       "min_value": 1,
-      "max_value": 3,
+      "max_value": 10,
       "nullable": true,
       "of_type": "demography"
     }
