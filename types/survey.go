@@ -16,8 +16,8 @@ import (
 type Survey struct {
 	schema          Schema
 	index           orgNodeIndex
-	answersData     map[string][]*int
-	demographicData map[string][]*int
+	answersData     map[string][]int
+	demographicData map[string][]int
 }
 
 type loc struct {
@@ -168,33 +168,48 @@ func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
 	csvReader := csv.NewReader(file)
 	lines, err := csvReader.ReadAll()
 	if err != nil {
-		log.Fatal(err)
+		return Survey{}, err
 	}
+
 	nmToIx, _ := buildHeaderColumnMaps(lines[0])
 	orgIx := nmToIx[s.OrgNodesColumn.Name]
+
+	sortDataStart := time.Now()
 	data, _ := sortDataByOrgNode(lines[1:], orgIx)
+	log.Printf("Sorting data took %s\n", time.Since(sortDataStart))
 
 	dataNodes := make([]string, 0)
-
 	for _, row := range data {
 		dataNodes = append(dataNodes, row[orgIx])
 	}
 
-	_ = buildIndex(org, dataNodes)
+	ixBuildStart := time.Now()
+	index := buildIndex(org, dataNodes)
+	log.Printf("Building index took %s\n", time.Since(ixBuildStart))
 
 	demogsStart := time.Now()
-	_, err1 := parseColumnsData(data, s.GetDemographicsCodes(), nmToIx)
-	qstStart := time.Now()
+	demogs, err1 := parseColumnsData(data, s.GetDemographicsCodes(), nmToIx)
+	if err1 != nil {
+		return Survey{}, err1
+	}
 	demogsTotalTime := time.Since(demogsStart)
-	_, err2 := parseColumnsData(data, s.GetQuestionsCodes(), nmToIx)
+
+	qstStart := time.Now()
+	answers, err2 := parseColumnsData(data, s.GetQuestionsCodes(), nmToIx)
+	if err2 != nil {
+		return Survey{}, err2
+	}
 	qstTotalTime := time.Since(qstStart)
 	totalTime := time.Since(demogsStart)
-	if err1 != nil || err2 != nil {
-		return Survey{}, err
-	}
-	fmt.Printf("Reading demogs took %s\n", demogsTotalTime)
-	fmt.Printf("Reading questions took %s\n", qstTotalTime)
-	fmt.Printf("Total time for parsing questions + demogs: %s\n", totalTime)
 
-	return Survey{}, nil
+	log.Printf("Reading demogs took %s\n", demogsTotalTime)
+	log.Printf("Reading questions took %s\n", qstTotalTime)
+	log.Printf("Total time for parsing questions + demogs: %s\n", totalTime)
+
+	return Survey{
+		schema:          s,
+		index:           index,
+		answersData:     answers,
+		demographicData: demogs,
+	}, nil
 }
