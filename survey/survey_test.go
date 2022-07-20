@@ -1,4 +1,4 @@
-package types
+package survey
 
 import (
 	"reflect"

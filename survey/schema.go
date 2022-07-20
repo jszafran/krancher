@@ -1,17 +1,16 @@
-package kio
+package survey
 
 import (
 	"encoding/json"
 	"io/ioutil"
-	"krancher/types"
 	"log"
 	"os"
 )
 
-func SchemaFromJSON(path string) types.Schema {
+func SchemaFromJSON(path string) Schema {
 	// TODO: research what is idiomatic way of handling multiple errors in one func?
 	jsonFile, err1 := os.Open(path)
-	var schema types.Schema
+	var schema Schema
 
 	if err1 != nil {
 		log.Fatal(err1)

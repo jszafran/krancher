@@ -1,4 +1,4 @@
-package types
+package survey
 
 type ColumnType string
 type FilterType string
