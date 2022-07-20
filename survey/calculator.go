@@ -20,7 +20,7 @@ type CutResult struct {
 	Counts      map[string]QuestionAnswersCounts
 }
 
-func NewNoMatchResult(sch Schema) {
+func NewNoMatchResult(sch Schema) CutResult {
 	counts := map[string]QuestionAnswersCounts{}
 	for _, qst := range sch.GetQuestionsColumns() {
 		qstCounts := QuestionAnswersCounts{}
@@ -33,6 +33,7 @@ func NewNoMatchResult(sch Schema) {
 		Counts:      counts,
 	}
 }
+
 func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 	loc, exists := srv.index[c.OrgNode]
 	if !exists {
