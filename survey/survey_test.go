@@ -22,7 +22,7 @@ func TestSurvey_BuildIndex(t *testing.T) {
 		"N01.02.01.01.",
 		"N01.02.01.02.",
 	}}
-	got := buildIndex(orgNodes, dataNodes).data
+	got := buildIndex(orgNodes, dataNodes)
 	want := map[string]loc{
 		"N01.":          loc{0, 4, -1, -1},
 		"N01.01.":       loc{0, 3, 0, 1},

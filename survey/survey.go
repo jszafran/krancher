@@ -31,9 +31,7 @@ func newLoc() loc {
 	return loc{-1, -1, -1, -1}
 }
 
-type orgNodeIndex struct {
-	data map[string]loc
-}
+type orgNodeIndex map[string]loc
 
 func buildHeaderColumnMaps(columns []string) (map[string]int, map[int]string) {
 	nmToIx := map[string]int{}
@@ -78,7 +76,7 @@ func buildIndex(org OrgStructure, dataNodes []string) orgNodeIndex {
 		}
 		ixData[node] = l
 	}
-	return orgNodeIndex{ixData}
+	return ixData
 }
 
 func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {

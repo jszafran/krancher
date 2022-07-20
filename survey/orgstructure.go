@@ -2,21 +2,22 @@ package survey
 
 import (
 	"encoding/csv"
+	"log"
 	"os"
-	"sort"
 )
 
 type OrgStructure struct {
 	nodes []string
 }
 
-func (orgStr *OrgStructure) sortNodesAsc() {
-	sort.Strings(orgStr.nodes)
-}
-
 func ReadOrgStructureFromCSV(path string, hasHeader bool) OrgStructure {
 	file, _ := os.Open(path)
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
 
 	csvReader := csv.NewReader(file)
 
