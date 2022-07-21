@@ -1,6 +1,8 @@
 package survey
 
-import "log"
+import (
+	"log"
+)
 
 const (
 	Direct FilterType = "direct"
@@ -20,13 +22,18 @@ type CutResult struct {
 	Counts      map[string]QuestionAnswersCounts
 }
 
+func newQuestionEmptyResult(c Column) QuestionAnswersCounts {
+	cnts := QuestionAnswersCounts{}
+	for i := c.MinValue; i <= c.MaxValue; i++ {
+		cnts[i] = 0
+	}
+	return cnts
+}
+
 func NewNoMatchResult(sch Schema) CutResult {
 	counts := map[string]QuestionAnswersCounts{}
-	for _, qst := range sch.GetQuestionsColumns() {
-		qstCounts := QuestionAnswersCounts{}
-		for i := qst.MinValue; i <= qst.MaxValue; i++ {
-			qstCounts[i] = 0
-		}
+	for _, c := range sch.GetQuestionsColumns() {
+		counts[c.Name] = newQuestionEmptyResult(c)
 	}
 	return CutResult{
 		Respondents: 0,
@@ -40,17 +47,19 @@ func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 		log.Fatal("corrupted index")
 	}
 
-	var start, end int
+	var start, end int = -1, -1
 
 	if c.Type == Direct {
 		start = loc.directStart
 		end = loc.directEnd
-	} else {
+	} else if c.Type == Rollup {
 		start = loc.rollupStart
 		end = loc.rollupEnd
 	}
 
+	if start == -1 && end == -1 {
+		return NewNoMatchResult(sch)
+	}
 
-	for _, resp := range
 	return CutResult{}
 }
