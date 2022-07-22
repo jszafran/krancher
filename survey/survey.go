@@ -58,6 +58,14 @@ func (c CSVDataProvider) GetData() ([][]string, error) {
 	return lines, nil
 }
 
+type InMemoryDataProvider struct {
+	Data [][]string
+}
+
+func (i InMemoryDataProvider) GetData() ([][]string, error) {
+	return i.Data, nil
+}
+
 func buildHeaderColumnMaps(columns []string) (map[string]int, map[int]string) {
 	nmToIx := map[string]int{}
 	ixToNm := map[int]string{}

@@ -30,6 +30,14 @@ func newQuestionEmptyResult(c Column) QuestionAnswersCounts {
 	return cnts
 }
 
+func EmptyCounts(sch Schema) map[string]QuestionAnswersCounts {
+	res := make(map[string]QuestionAnswersCounts)
+	for _, qst := range sch.GetDemographicsCodes() {
+		res[qst] = make(QuestionAnswersCounts)
+	}
+	return res
+}
+
 func NewNoMatchResult(sch Schema) CutResult {
 	counts := map[string]QuestionAnswersCounts{}
 	for _, c := range sch.GetQuestionsColumns() {
@@ -61,7 +69,7 @@ func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 		return NewNoMatchResult(sch)
 	}
 
-	counts := map[string]QuestionAnswersCounts{}
+	counts := EmptyCounts(srv.schema)
 	questions := sch.GetQuestionsCodes()
 	if len(c.Demographics) == 0 {
 		for i := start; i <= end; i++ {
