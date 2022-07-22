@@ -16,8 +16,8 @@ const (
 type Column struct {
 	Name     string     `json:"name,omitempty"`
 	Text     string     `json:"text,omitempty"`
-	MinValue uint       `json:"min_value,omitempty"`
-	MaxValue uint       `json:"max_value,omitempty"`
+	MinValue int        `json:"min_value,omitempty"`
+	MaxValue int        `json:"max_value,omitempty"`
 	Nullable bool       `json:"nullable,omitempty"`
 	OfType   ColumnType `json:"of_type,omitempty"`
 }

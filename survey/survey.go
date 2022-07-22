@@ -33,6 +33,31 @@ func newLoc() loc {
 
 type orgNodeIndex map[string]loc
 
+type DataProvider interface {
+	GetData() ([][]string, error)
+}
+
+type CSVDataProvider struct {
+	DataPath string
+}
+
+func (c CSVDataProvider) GetData() ([][]string, error) {
+	file, err := os.Open(c.DataPath)
+	defer file.Close()
+
+	if err != nil {
+		return nil, err
+	}
+	reader := csv.NewReader(file)
+	lines, err1 := reader.ReadAll()
+
+	if err1 != nil {
+		return nil, err1
+	}
+
+	return lines, nil
+}
+
 func buildHeaderColumnMaps(columns []string) (map[string]int, map[int]string) {
 	nmToIx := map[string]int{}
 	ixToNm := map[int]string{}
@@ -159,12 +184,8 @@ func parseColumnsData(data [][]string, codes []string, nmToIxMap map[string]int)
 	return parsedData, nil
 }
 
-func NewSurvey(dataPath string, s Schema, org OrgStructure) (Survey, error) {
-	file, _ := os.Open(dataPath)
-	defer file.Close()
-
-	csvReader := csv.NewReader(file)
-	lines, err := csvReader.ReadAll()
+func NewSurvey(dataProvider DataProvider, s Schema, org OrgStructure) (Survey, error) {
+	lines, err := dataProvider.GetData()
 	if err != nil {
 		return Survey{}, err
 	}
