@@ -15,7 +15,7 @@ type Cut struct {
 	Demographics map[string]int
 }
 
-type QuestionAnswersCounts map[uint]uint
+type QuestionAnswersCounts map[int]int
 
 type CutResult struct {
 	Respondents int
@@ -47,7 +47,7 @@ func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 		log.Fatal("corrupted index")
 	}
 
-	var start, end int = -1, -1
+	var start, end = -1, -1
 
 	if c.Type == Direct {
 		start = loc.directStart
@@ -61,5 +61,38 @@ func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 		return NewNoMatchResult(sch)
 	}
 
-	return CutResult{}
+	counts := map[string]QuestionAnswersCounts{}
+	questions := sch.GetQuestionsCodes()
+	if len(c.Demographics) == 0 {
+		for i := start; i <= end; i++ {
+			for _, qst := range questions {
+				v := srv.answersData[qst][i]
+				if v > -1 {
+					counts[qst][v]++
+				}
+			}
+		}
+		return CutResult{Respondents: end - start + 1, Counts: counts}
+	}
+
+	respondents := 0
+	for i := start; i <= end; i++ {
+		// check demographic data
+		eligible := true
+		for k, v := range c.Demographics {
+			if srv.demographicData[k][i] != v {
+				eligible = false
+			}
+		}
+		if eligible {
+			respondents++
+			for _, qst := range questions {
+				v := srv.answersData[qst][i]
+				if v > 1 {
+					counts[qst][v]++
+				}
+			}
+		}
+	}
+	return CutResult{Respondents: respondents, Counts: counts}
 }
