@@ -41,10 +41,7 @@ func EmptyCounts(sch Schema) map[string]QuestionAnswersCounts {
 }
 
 func NewNoMatchResult(sch Schema, id string) CutResult {
-	counts := map[string]QuestionAnswersCounts{}
-	for _, c := range sch.GetQuestionsColumns() {
-		counts[c.Name] = newQuestionEmptyResult(c)
-	}
+	counts := EmptyCounts(sch)
 	return CutResult{
 		Respondents: 0,
 		Counts:      counts,
