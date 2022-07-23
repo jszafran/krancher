@@ -67,10 +67,8 @@ func (s *SynchronousDataProcessor) Process(cuts []Cut) []CutResult {
 		start, end := -1, -1
 		switch cut.Type {
 		case Direct:
-			{
-				start = loc.directStart
-				end = loc.directEnd
-			}
+			start = loc.directStart
+			end = loc.directEnd
 		case Rollup:
 			start = loc.rollupStart
 			end = loc.rollupEnd
