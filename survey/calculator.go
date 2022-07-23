@@ -97,7 +97,7 @@ func (s *SynchronousDataProcessor) Process(cuts []Cut) []CutResult {
 				respondents++
 				for _, qst := range questions {
 					v := survey.answersData[qst][i]
-					if v > 1 {
+					if v > -1 {
 						counts[qst][v]++
 					}
 				}
