@@ -42,21 +42,76 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 		{"D2", "D2", 1, 6, true, Demography},
 	}}
 	srv, _ := NewSurvey(dp, sch, org)
-	cuts := []Cut{{Id: "C1", Type: Rollup, OrgNode: "N01.01.", Demographics: make(map[string]int, 0)}}
+	emptyDemog := make(map[string]int)
+	cuts := []Cut{
+		{Id: "C1", Type: Rollup, OrgNode: "N01.01.", Demographics: emptyDemog},
+		{Id: "C2", Type: Direct, OrgNode: "N02.", Demographics: emptyDemog},
+		{Id: "C3", Type: Direct, OrgNode: "N02.", Demographics: map[string]int{"D1": 1, "D2": 1}},
+		{Id: "C4", Type: Direct, OrgNode: "N02.", Demographics: map[string]int{"D1": 1, "D2": 2}},
+		{Id: "C5", Type: Direct, OrgNode: "N02.", Demographics: map[string]int{"D2": 2}},
+		{Id: "C6", Type: Rollup, OrgNode: "N01.", Demographics: map[string]int{"D1": 1}},
+	}
 
 	syncDataProc := SynchronousDataProcessor{
 		Survey: &srv,
 		Schema: sch,
 	}
 
-	got := syncDataProc.Process(cuts)[0]
-	want := CutResult{
-		Id:          "C1",
-		Respondents: 3,
-		Counts: map[string]QuestionAnswersCounts{
-			"Q1": {1: 1, 2: 1, 3: 0, 4: 0, 5: 1, 6: 0},
-			"Q2": {1: 0, 2: 2, 3: 0, 4: 0, 5: 1, 6: 0},
-			"Q3": {1: 0, 2: 0, 3: 0, 4: 0, 5: 3, 6: 0},
+	got := syncDataProc.Process(cuts)
+	want := []CutResult{
+		{
+			Id:          "C1",
+			Respondents: 3,
+			Counts: map[string]QuestionAnswersCounts{
+				"Q1": {1: 1, 2: 1, 3: 0, 4: 0, 5: 1, 6: 0},
+				"Q2": {1: 0, 2: 2, 3: 0, 4: 0, 5: 1, 6: 0},
+				"Q3": {1: 0, 2: 0, 3: 0, 4: 0, 5: 3, 6: 0},
+			},
+		},
+		{
+			Id:          "C2",
+			Respondents: 1,
+			Counts: map[string]QuestionAnswersCounts{
+				"Q1": {1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0},
+				"Q2": {1: 0, 2: 1, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q3": {1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+			},
+		},
+		{
+			Id:          "C3",
+			Respondents: 0,
+			Counts: map[string]QuestionAnswersCounts{
+				"Q1": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q2": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q3": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+			},
+		},
+		{
+			Id:          "C4",
+			Respondents: 1,
+			Counts: map[string]QuestionAnswersCounts{
+				"Q1": {1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0},
+				"Q2": {1: 0, 2: 1, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q3": {1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+			},
+		},
+		{
+			Id:          "C5",
+			Respondents: 1,
+			Counts: map[string]QuestionAnswersCounts{
+				"Q1": {1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0},
+				"Q2": {1: 0, 2: 1, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q3": {1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+			},
+		},
+		{
+			Id:          "C6",
+			Respondents: 2,
+			Counts: map[string]QuestionAnswersCounts{
+				"Q1": {1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q2": {1: 0, 2: 1, 3: 0, 4: 0, 5: 0, 6: 0},
+				"Q3": {1: 0, 2: 0, 3: 1, 4: 0, 5: 1, 6: 0},
+			},
 		},
 	}
 
