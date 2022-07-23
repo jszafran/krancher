@@ -2,6 +2,7 @@ package survey
 
 import (
 	"log"
+	"time"
 )
 
 const (
@@ -10,6 +11,7 @@ const (
 )
 
 type Cut struct {
+	Id           string
 	OrgNode      string
 	Type         FilterType
 	Demographics map[string]int
@@ -18,6 +20,7 @@ type Cut struct {
 type QuestionAnswersCounts map[int]int
 
 type CutResult struct {
+	Id          string
 	Respondents int
 	Counts      map[string]QuestionAnswersCounts
 }
@@ -31,11 +34,11 @@ func newQuestionEmptyResult(c Column) QuestionAnswersCounts {
 }
 
 func EmptyCounts(sch Schema) map[string]QuestionAnswersCounts {
-	res := make(map[string]QuestionAnswersCounts)
-	for _, qst := range sch.GetDemographicsCodes() {
-		res[qst] = make(QuestionAnswersCounts)
+	counts := map[string]QuestionAnswersCounts{}
+	for _, c := range sch.GetQuestionsColumns() {
+		counts[c.Name] = newQuestionEmptyResult(c)
 	}
-	return res
+	return counts
 }
 
 func NewNoMatchResult(sch Schema) CutResult {
@@ -50,6 +53,7 @@ func NewNoMatchResult(sch Schema) CutResult {
 }
 
 func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
+	startTime := time.Now()
 	loc, exists := srv.index[c.OrgNode]
 	if !exists {
 		log.Fatal("corrupted index")
@@ -80,6 +84,7 @@ func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 				}
 			}
 		}
+		log.Printf("Time took to calculate cut %s", time.Since(startTime))
 		return CutResult{Respondents: end - start + 1, Counts: counts}
 	}
 
@@ -102,5 +107,6 @@ func CalculateCounts(srv *Survey, sch Schema, c Cut) CutResult {
 			}
 		}
 	}
+	log.Printf("Time took to calculate cut %s", time.Since(startTime))
 	return CutResult{Respondents: respondents, Counts: counts}
 }

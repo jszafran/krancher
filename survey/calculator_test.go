@@ -55,6 +55,6 @@ func TestCalculateCounts(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(got, want) {
-		log.Fatal("Foooo")
+		log.Fatalf("Expected %v but got %v", want, got)
 	}
 }
