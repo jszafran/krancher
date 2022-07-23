@@ -1,5 +1,7 @@
 package survey
 
+type FilterType string
+
 const (
 	Direct FilterType = "direct"
 	Rollup            = "rollup"

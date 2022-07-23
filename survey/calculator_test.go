@@ -1,7 +1,6 @@
 package survey
 
 import (
-	"log"
 	"reflect"
 	"testing"
 )
@@ -116,6 +115,6 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(got, want) {
-		log.Fatalf("Expected %v but got %v", want, got)
+		t.Fatalf("Expected %v but got %v", want, got)
 	}
 }
