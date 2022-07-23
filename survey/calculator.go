@@ -53,16 +53,16 @@ func NewNoMatchResult(sch Schema, id string) CutResult {
 }
 
 type SynchronousDataProcessor struct {
-	survey *Survey
-	schema Schema
+	Survey *Survey
+	Schema Schema
 }
 
 func (s *SynchronousDataProcessor) Process(cuts []Cut) []CutResult {
 	results := make([]CutResult, 0)
-	survey := s.survey
-	schema := s.survey.schema
+	survey := s.Survey
+	schema := s.Survey.schema
 	for _, cut := range cuts {
-		loc, exists := s.survey.index[cut.OrgNode]
+		loc, exists := survey.index[cut.OrgNode]
 		if !exists {
 			results = append(results, NewNoMatchResult(schema, cut.Id))
 		}

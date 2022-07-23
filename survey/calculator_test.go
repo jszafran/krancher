@@ -45,8 +45,8 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 	cuts := []Cut{{Id: "C1", Type: Rollup, OrgNode: "N01.01.", Demographics: make(map[string]int, 0)}}
 
 	syncDataProc := SynchronousDataProcessor{
-		survey: &srv,
-		schema: sch,
+		Survey: &srv,
+		Schema: sch,
 	}
 
 	got := syncDataProc.Process(cuts)[0]
