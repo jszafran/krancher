@@ -36,7 +36,7 @@ func (w *Workload) GetDemographicsSet() []string {
 		}
 	}
 	demographics := make([]string, 0)
-	for k, _ := range set {
+	for k := range set {
 		demographics = append(demographics, k)
 	}
 

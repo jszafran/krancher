@@ -1,0 +1,98 @@
+[
+    {
+        "id": "C1",
+        "org_node": "N00.01.01.",
+        "type": "rollup",
+        "demographics": []
+    },
+    {
+        "id": "C2",
+        "org_node": "N00.01.01.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D1": 1
+            }
+        ]
+    },
+    {
+        "id": "C3",
+        "org_node": "N00.01.01.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D1": 2
+            }
+        ]
+    },
+    {
+        "id": "C4",
+        "org_node": "N00.01.01.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D1": 3
+            }
+        ]
+    },
+    {
+        "id": "C5",
+        "org_node": "N00.01.01.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D1": 4
+            }
+        ]
+    },
+    {
+        "id": "C190022",
+        "org_node": "N00.01.01.01.03.08.33.07.03.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D11": 12
+            }
+        ]
+    },
+    {
+        "id": "C190023",
+        "org_node": "N00.01.01.01.03.08.33.07.03.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D11": 13
+            }
+        ]
+    },
+    {
+        "id": "C190024",
+        "org_node": "N00.01.01.01.03.08.33.07.03.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D11": 14
+            }
+        ]
+    },
+    {
+        "id": "C190025",
+        "org_node": "N00.01.01.01.03.08.33.07.03.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D11": 15
+            }
+        ]
+    },
+    {
+        "id": "C190026",
+        "org_node": "N00.01.01.01.03.08.33.07.03.",
+        "type": "rollup",
+        "demographics": [
+            {
+                "D11": 16
+            }
+        ]
+    }
+]
