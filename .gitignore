@@ -124,4 +124,7 @@ fabric.properties
 resources/data_nodes*x.csv
 
 resources/*big_survey*
-resources/cuts_all.json
+resources/itest_all_cuts.json
+resources/itest_data.csv
+resources/itest_org.csv
+resources/itest_schema.json
