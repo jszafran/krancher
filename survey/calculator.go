@@ -1,6 +1,13 @@
 package survey
 
-import "sort"
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"sort"
+)
 
 type FilterType string
 
@@ -129,7 +136,28 @@ func (s *SynchronousDataProcessor) Process(w Workload) []CutResult {
 			Respondents: respondents,
 			Counts:      counts,
 		})
-
+		fmt.Printf("Cut %s done\n", cut.Id)
 	}
 	return results
+}
+
+func WorkloadFromJSON(path string) (Workload, error) {
+	jsonFile, err1 := os.Open(path)
+	defer jsonFile.Close()
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	bytes, err2 := ioutil.ReadAll(jsonFile)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	var cuts []Cut
+	err3 := json.Unmarshal(bytes, &cuts)
+	if err3 != nil {
+		log.Fatal(err3)
+	}
+
+	return Workload{Cuts: cuts}, nil
 }
