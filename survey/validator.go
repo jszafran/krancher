@@ -40,8 +40,7 @@ func ValidateWorkload(wrkl Workload, org OrgStructure, schema Schema) []error {
 
 	for _, demog := range wrkl.GetDemographicsSet() {
 		if !demogsContains(schema, demog) {
-
-			errs = append(errs, errors.New(""))
+			errs = append(errs, errors.New(fmt.Sprintf("%s: %s", WorkloadContainsDemogOutsideOfSchema, demog)))
 		}
 	}
 	return errs

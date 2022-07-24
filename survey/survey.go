@@ -66,16 +66,13 @@ func (i InMemoryDataProvider) GetData() ([][]string, error) {
 	return i.Data, nil
 }
 
-func buildHeaderColumnMaps(columns []string) (map[string]int, map[int]string) {
+func buildHeaderColumnMaps(columns []string) map[string]int {
 	nmToIx := map[string]int{}
-	ixToNm := map[int]string{}
 
 	for i, col := range columns {
 		nmToIx[col] = i
-		ixToNm[i] = col
 	}
-
-	return nmToIx, ixToNm
+	return nmToIx
 }
 
 func buildIndex(org OrgStructure, dataNodes []string) orgNodeIndex {
@@ -198,7 +195,7 @@ func NewSurvey(dataProvider DataProvider, s Schema, org OrgStructure) (Survey, e
 		return Survey{}, err
 	}
 
-	nmToIx, _ := buildHeaderColumnMaps(lines[0])
+	nmToIx := buildHeaderColumnMaps(lines[0])
 	orgIx := nmToIx[s.OrgNodesColumn.Name]
 
 	sortDataStart := time.Now()
