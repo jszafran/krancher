@@ -2,11 +2,11 @@ package survey
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"sort"
+	"time"
 )
 
 type FilterType string
@@ -38,7 +38,7 @@ type Workload struct {
 func (w *Workload) GetDemographicsSet() []string {
 	set := make(map[string]bool)
 	for _, c := range w.Cuts {
-		for k, _ := range c.Demographics {
+		for k := range c.Demographics {
 			set[k] = true
 		}
 	}
@@ -89,9 +89,11 @@ type SynchronousDataProcessor struct {
 
 func (s *SynchronousDataProcessor) Process(w Workload) []CutResult {
 	results := make([]CutResult, 0)
+
 	survey := s.Survey
 	schema := s.Survey.schema
-	for _, cut := range w.Cuts {
+	intervalStartTime := time.Now()
+	for i, cut := range w.Cuts {
 		loc, exists := survey.index[cut.OrgNode]
 		if !exists {
 			results = append(results, NewNoMatchResult(schema, cut.Id))
@@ -136,7 +138,11 @@ func (s *SynchronousDataProcessor) Process(w Workload) []CutResult {
 			Respondents: respondents,
 			Counts:      counts,
 		})
-		fmt.Printf("Cut %s done\n", cut.Id)
+		if r := i + 1; r%10_000 == 0 {
+			log.Printf("10k cuts done (%v in total). Calc round took %s\n", r, time.Since(intervalStartTime))
+			intervalStartTime = time.Now()
+		}
+
 	}
 	return results
 }

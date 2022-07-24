@@ -9,7 +9,7 @@ import (
 
 func main() {
 	programStart := time.Now()
-	dataProvider := survey.CSVDataProvider{DataPath: "resources/itest_data.csv"}
+	dataProvider := survey.CSVDataProvider{DataPath: "resources/itest_data_2x.csv"}
 	schema := survey.SchemaFromJSON("resources/itest_schema.json")
 	orgStructure := survey.ReadOrgStructureFromCSV("resources/itest_org.csv", false)
 	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure)

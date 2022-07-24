@@ -128,3 +128,4 @@ resources/itest_all_cuts.json
 resources/itest_data.csv
 resources/itest_org.csv
 resources/itest_schema.json
+resources/itest_data_*x.csv
