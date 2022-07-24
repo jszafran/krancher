@@ -25,12 +25,12 @@ type CutResult struct {
 }
 
 type Workload struct {
-	cuts []Cut
+	Cuts []Cut
 }
 
 func (w *Workload) GetDemographicsSet() []string {
 	set := make(map[string]bool)
-	for _, c := range w.cuts {
+	for _, c := range w.Cuts {
 		for k, _ := range c.Demographics {
 			set[k] = true
 		}
@@ -47,7 +47,7 @@ func (w *Workload) GetDemographicsSet() []string {
 }
 
 type DataProcessor interface {
-	Process(cuts []Cut) []CutResult
+	Process(w Workload) []CutResult
 }
 
 func newQuestionEmptyResult(c Column) QuestionAnswersCounts {
@@ -80,11 +80,11 @@ type SynchronousDataProcessor struct {
 	Schema Schema
 }
 
-func (s *SynchronousDataProcessor) Process(cuts []Cut) []CutResult {
+func (s *SynchronousDataProcessor) Process(w Workload) []CutResult {
 	results := make([]CutResult, 0)
 	survey := s.Survey
 	schema := s.Survey.schema
-	for _, cut := range cuts {
+	for _, cut := range w.Cuts {
 		loc, exists := survey.index[cut.OrgNode]
 		if !exists {
 			results = append(results, NewNoMatchResult(schema, cut.Id))

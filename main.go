@@ -36,8 +36,9 @@ func main() {
 	//}
 
 	calcTime := time.Now()
-	dataProc := survey.SynchronousDataProcessor{&srv, schema}
-	_ = dataProc.Process([]survey.Cut{c1})
+	dataProc := survey.SynchronousDataProcessor{Survey: &srv, Schema: schema}
+	wrkl := survey.Workload{Cuts: []survey.Cut{c1}}
+	_ = dataProc.Process(wrkl)
 	log.Printf("Total time for calculating cuts: %s", time.Since(calcTime))
 	log.Printf("Total program time: %s", time.Since(programStart))
 }

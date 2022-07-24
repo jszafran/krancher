@@ -56,7 +56,7 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 		Schema: sch,
 	}
 
-	got := syncDataProc.Process(cuts)
+	got := syncDataProc.Process(Workload{cuts})
 	want := []CutResult{
 		{
 			Id:          "C1",
