@@ -10,10 +10,10 @@ const (
 )
 
 type Cut struct {
-	Id           string
-	OrgNode      string
-	Type         FilterType
-	Demographics map[string]int
+	Id           string         `json:"id"`
+	OrgNode      string         `json:"org_node"`
+	Type         FilterType     `json:"type"`
+	Demographics map[string]int `json:"demographics"`
 }
 
 type QuestionAnswersCounts map[int]int
