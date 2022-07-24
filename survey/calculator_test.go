@@ -118,3 +118,28 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 		t.Fatalf("Expected %v but got %v", want, got)
 	}
 }
+
+func TestWorkload_GetDemographicsSet(t *testing.T) {
+	cuts := []Cut{
+		{
+			Demographics: nil,
+		},
+		{
+			Demographics: map[string]int{"D5": 1, "D2": 2},
+		},
+		{
+			Demographics: map[string]int{"D3": 1, "D4": 2},
+		},
+		{
+			Demographics: map[string]int{"D1": 1},
+		},
+	}
+	wrkl := Workload{cuts}
+
+	got := wrkl.GetDemographicsSet()
+	want := []string{"D1", "D2", "D3", "D4", "D5"}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Got %v but expected %v", got, want)
+	}
+}

@@ -1,5 +1,7 @@
 package survey
 
+import "sort"
+
 type FilterType string
 
 const (
@@ -22,16 +24,38 @@ type CutResult struct {
 	Counts      map[string]QuestionAnswersCounts
 }
 
+type Workload struct {
+	cuts []Cut
+}
+
+func (w *Workload) GetDemographicsSet() []string {
+	set := make(map[string]bool)
+	for _, c := range w.cuts {
+		for k, _ := range c.Demographics {
+			set[k] = true
+		}
+	}
+	demographics := make([]string, 0)
+	for k, _ := range set {
+		demographics = append(demographics, k)
+	}
+
+	sort.SliceStable(demographics, func(i, j int) bool {
+		return demographics[i] < demographics[j]
+	})
+	return demographics
+}
+
 type DataProcessor interface {
 	Process(cuts []Cut) []CutResult
 }
 
 func newQuestionEmptyResult(c Column) QuestionAnswersCounts {
-	cnts := QuestionAnswersCounts{}
+	counts := QuestionAnswersCounts{}
 	for i := c.MinValue; i <= c.MaxValue; i++ {
-		cnts[i] = 0
+		counts[i] = 0
 	}
-	return cnts
+	return counts
 }
 
 func EmptyCounts(sch Schema) map[string]QuestionAnswersCounts {
