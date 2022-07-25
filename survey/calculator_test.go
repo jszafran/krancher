@@ -51,12 +51,14 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 		{Id: "C6", Type: Rollup, OrgNode: "N01.", Demographics: map[string]int{"D1": 1}},
 	}
 
-	syncDataProc := SynchronousDataProcessor{
-		Survey: &srv,
-		Schema: sch,
+	wrklSequential := Workload{
+		Survey:    &srv,
+		Schema:    sch,
+		Cuts:      cuts,
+		Algorithm: SequentialCutProcessor,
 	}
 
-	got := syncDataProc.Process(Workload{cuts})
+	got := wrklSequential.Run()
 	want := []CutResult{
 		{
 			Id:          "C1",
@@ -117,6 +119,19 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("Expected %v but got %v", want, got)
 	}
+
+	wrklConcurrent := Workload{
+		Survey:    &srv,
+		Schema:    sch,
+		Cuts:      cuts,
+		Algorithm: SequentialCutProcessor,
+	}
+
+	want = wrklConcurrent.Run()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Expected %v but got %v", want, got)
+	}
 }
 
 func TestWorkload_GetDemographicsSet(t *testing.T) {
@@ -134,7 +149,12 @@ func TestWorkload_GetDemographicsSet(t *testing.T) {
 			Demographics: map[string]int{"D1": 1},
 		},
 	}
-	wrkl := Workload{cuts}
+	wrkl := Workload{
+		Survey:    nil,
+		Schema:    Schema{},
+		Cuts:      cuts,
+		Algorithm: nil,
+	}
 
 	got := wrkl.GetDemographicsSet()
 	want := []string{"D1", "D2", "D3", "D4", "D5"}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"krancher/survey"
 	"log"
 	"time"
@@ -9,20 +8,22 @@ import (
 
 func main() {
 	programStart := time.Now()
-	dataProvider := survey.CSVDataProvider{DataPath: "resources/itest_data_10x.csv"}
+	dataProvider := survey.CSVDataProvider{DataPath: "resources/itest_data_50x.csv"}
 	schema := survey.SchemaFromJSON("resources/itest_schema.json")
 	orgStructure := survey.ReadOrgStructureFromCSV("resources/itest_org.csv", false)
-	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, survey.Sequential)
+	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, survey.Concurrent)
 
 	if err != nil {
 		log.Fatalf("failed to create the survey, %s", err)
 	}
 
-	calcTime := time.Now()
-	dataProc := survey.ConcurrentDataProcessor{Survey: &srv, Schema: schema}
-	wrkl, _ := survey.WorkloadFromJSON("resources/itest_all_cuts.json")
-	res := dataProc.Process(wrkl)
-	log.Printf("Total time for calculating cuts: %s", time.Since(calcTime))
-	log.Printf("Total program time: %s", time.Since(programStart))
-	fmt.Println(len(res))
+	cuts, _ := survey.CutsFromJSON("resources/itest_all_cuts.json")
+	wrkl := survey.Workload{
+		Survey:    &srv,
+		Schema:    survey.Schema{},
+		Cuts:      cuts,
+		Algorithm: survey.ConcurrentCutProcessor,
+	}
+	wrkl.Run()
+	log.Printf("Total program time: %s\n", time.Since(programStart))
 }

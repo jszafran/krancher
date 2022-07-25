@@ -33,7 +33,10 @@ type CutResult struct {
 }
 
 type Workload struct {
-	Cuts []Cut
+	Survey    *Survey
+	Schema    Schema
+	Cuts      []Cut
+	Algorithm func(cuts []Cut, survey *Survey) []CutResult
 }
 
 func (w *Workload) GetDemographicsSet() []string {
@@ -52,6 +55,13 @@ func (w *Workload) GetDemographicsSet() []string {
 		return demographics[i] < demographics[j]
 	})
 	return demographics
+}
+
+func (w *Workload) Run() []CutResult {
+	t1 := time.Now()
+	results := w.Algorithm(w.Cuts, w.Survey)
+	log.Printf("Workload (%d cuts) completed! It took %s.", len(w.Cuts), time.Since(t1))
+	return results
 }
 
 type DataProcessor interface {
@@ -83,107 +93,15 @@ func NewNoMatchResult(sch Schema, id string) CutResult {
 	}
 }
 
-type SynchronousDataProcessor struct {
-	Survey *Survey
-	Schema Schema
-}
-
-func (s *SynchronousDataProcessor) Process(w Workload) []CutResult {
-	results := make([]CutResult, 0)
-
-	survey := s.Survey
-	schema := s.Survey.schema
-	intervalStartTime := time.Now()
-	for i, cut := range w.Cuts {
-		loc, exists := survey.index[cut.OrgNode]
-		if !exists {
-			results = append(results, NewNoMatchResult(schema, cut.Id))
-		}
-
-		start, end := -1, -1
-		switch cut.Type {
-		case Direct:
-			start = loc.directStart
-			end = loc.directEnd
-		case Rollup:
-			start = loc.rollupStart
-			end = loc.rollupEnd
-		}
-
-		if start == -1 && end == -1 {
-			results = append(results, NewNoMatchResult(schema, cut.Id))
-		}
-
-		counts := EmptyCounts(schema)
-		questions := schema.GetQuestionsCodes()
-		respondents := 0
-		for i := start; i <= end; i++ {
-			eligible := true
-			for k, v := range cut.Demographics {
-				if survey.demographicData[k][i] != v {
-					eligible = false
-				}
-			}
-			if eligible {
-				respondents++
-				for _, qst := range questions {
-					v := survey.answersData[qst][i]
-					if v > -1 {
-						counts[qst][v]++
-					}
-				}
-			}
-		}
-		results = append(results, CutResult{
-			Id:          cut.Id,
-			Respondents: respondents,
-			Counts:      counts,
-		})
-		if r := i + 1; r%10_000 == 0 {
-			log.Printf("10k cuts done (%v in total). Calc round took %s\n", r, time.Since(intervalStartTime))
-			intervalStartTime = time.Now()
-		}
-
-	}
-	return results
-}
-
-func WorkloadFromJSON(path string) (Workload, error) {
-	jsonFile, err1 := os.Open(path)
-	defer jsonFile.Close()
-	if err1 != nil {
-		log.Fatal(err1)
-	}
-
-	bytes, err2 := ioutil.ReadAll(jsonFile)
-	if err2 != nil {
-		log.Fatal(err2)
-	}
-
-	var cuts []Cut
-	err3 := json.Unmarshal(bytes, &cuts)
-	if err3 != nil {
-		log.Fatal(err3)
-	}
-
-	return Workload{Cuts: cuts}, nil
-}
-
-type ConcurrentDataProcessor struct {
-	Survey *Survey
-	Schema Schema
-}
-
-func calculateCut(survey *Survey, cut Cut, resChan chan<- CutResult, wg *sync.WaitGroup) {
-	defer wg.Done()
+func calculateCut(cut Cut, survey *Survey) CutResult {
 	schema := survey.schema
 	loc, exists := survey.index[cut.OrgNode]
 	if !exists {
-		resChan <- NewNoMatchResult(schema, cut.Id)
-		return
+		return NewNoMatchResult(schema, cut.Id)
 	}
 
 	start, end := -1, -1
+
 	switch cut.Type {
 	case Direct:
 		start = loc.directStart
@@ -194,8 +112,7 @@ func calculateCut(survey *Survey, cut Cut, resChan chan<- CutResult, wg *sync.Wa
 	}
 
 	if start == -1 && end == -1 {
-		resChan <- NewNoMatchResult(schema, cut.Id)
-		return
+		return NewNoMatchResult(schema, cut.Id)
 	}
 
 	counts := EmptyCounts(schema)
@@ -218,32 +135,65 @@ func calculateCut(survey *Survey, cut Cut, resChan chan<- CutResult, wg *sync.Wa
 			}
 		}
 	}
-	resChan <- CutResult{
+	return CutResult{
 		Id:          cut.Id,
 		Respondents: respondents,
 		Counts:      counts,
 	}
 }
 
-func (s *ConcurrentDataProcessor) Process(w Workload) []CutResult {
-	startTime := time.Now()
-	resChan := make(chan CutResult, len(w.Cuts))
+func SequentialCutProcessor(cuts []Cut, survey *Survey) []CutResult {
+	res := make([]CutResult, 0)
+	for _, cut := range cuts {
+		cr := calculateCut(cut, survey)
+		res = append(res, cr)
+	}
+	return res
+}
+
+func ConcurrentCutProcessor(cuts []Cut, survey *Survey) []CutResult {
 	var wg sync.WaitGroup
+	ch := make(chan CutResult, len(cuts))
 
-	for _, cut := range w.Cuts {
+	processCut := func(c Cut, s *Survey, ch chan<- CutResult, wg *sync.WaitGroup) {
+		defer wg.Done()
+		ch <- calculateCut(c, s)
+	}
+
+	for _, cut := range cuts {
 		wg.Add(1)
-		go calculateCut(s.Survey, cut, resChan, &wg)
-
+		go processCut(cut, survey, ch, &wg)
 	}
 
 	wg.Wait()
-	close(resChan)
+	close(ch)
 
 	res := make([]CutResult, 0)
 
-	for r := range resChan {
-		res = append(res, r)
+	for cr := range ch {
+		res = append(res, cr)
 	}
-	log.Printf("Workload completed in %s", time.Since(startTime))
+
 	return res
+}
+
+func CutsFromJSON(path string) ([]Cut, error) {
+	jsonFile, err1 := os.Open(path)
+	defer jsonFile.Close()
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	bytes, err2 := ioutil.ReadAll(jsonFile)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	var cuts []Cut
+	err3 := json.Unmarshal(bytes, &cuts)
+	if err3 != nil {
+		log.Fatal(err3)
+	}
+
+	return cuts, nil
 }
