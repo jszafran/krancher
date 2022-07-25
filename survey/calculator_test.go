@@ -2,6 +2,7 @@ package survey
 
 import (
 	"reflect"
+	"sort"
 	"testing"
 )
 
@@ -124,11 +125,17 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 		Survey:    &srv,
 		Schema:    sch,
 		Cuts:      cuts,
-		Algorithm: SequentialCutProcessor,
+		Algorithm: ConcurrentCutProcessor,
 	}
 
 	want = wrklConcurrent.Run()
 
+	sort.SliceStable(got, func(i, j int) bool {
+		return got[i].Id < got[j].Id
+	})
+	sort.SliceStable(want, func(i, j int) bool {
+		return want[i].Id < want[j].Id
+	})
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("Expected %v but got %v", want, got)
 	}
