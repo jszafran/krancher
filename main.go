@@ -12,7 +12,7 @@ func main() {
 	dataProvider := survey.CSVDataProvider{DataPath: "resources/itest_data_10x.csv"}
 	schema := survey.SchemaFromJSON("resources/itest_schema.json")
 	orgStructure := survey.ReadOrgStructureFromCSV("resources/itest_org.csv", false)
-	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, survey.ConcurrentIndex)
+	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, survey.Sequential)
 
 	if err != nil {
 		log.Fatalf("failed to create the survey, %s", err)

@@ -28,6 +28,13 @@ type loc struct {
 	directEnd   int
 }
 
+type IndexBuilder string
+
+const (
+	Concurrent IndexBuilder = "concurrent"
+	Sequential              = "sequential"
+)
+
 func newLoc() loc {
 	return loc{-1, -1, -1, -1}
 }
@@ -228,7 +235,7 @@ func NewSurvey(
 	dataProvider DataProvider,
 	s Schema,
 	org OrgStructure,
-	indexFunc func(org OrgStructure, dataNodes []string) OrgNodeIndex,
+	ib IndexBuilder,
 ) (Survey, error) {
 	lines, err := dataProvider.GetData()
 	if err != nil {
@@ -248,7 +255,14 @@ func NewSurvey(
 	}
 
 	ixBuildStart := time.Now()
-	index := indexFunc(org, dataNodes)
+	var ixImpl func(org OrgStructure, dataNodes []string) OrgNodeIndex
+	switch ib {
+	case Concurrent:
+		ixImpl = ConcurrentIndex
+	case Sequential:
+		ixImpl = SequentialIndex
+	}
+	index := ixImpl(org, dataNodes)
 	log.Printf("Building index took %s\n", time.Since(ixBuildStart))
 
 	demogsStart := time.Now()
