@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestSurvey_BuildIndex(t *testing.T) {
+func TestSurvey_IndexFuncs(t *testing.T) {
 	dataNodes := []string{
 		"N01.01.",
 		"N01.01.",
@@ -22,8 +22,7 @@ func TestSurvey_BuildIndex(t *testing.T) {
 		"N01.02.01.01.",
 		"N01.02.01.02.",
 	}}
-	got := buildIndex(orgNodes, dataNodes)
-	want := orgNodeIndex{
+	want := OrgNodeIndex{
 		"N01.":          loc{0, 4, -1, -1},
 		"N01.01.":       loc{0, 3, 0, 1},
 		"N01.01.01.":    loc{2, 2, 2, 2},
@@ -32,6 +31,14 @@ func TestSurvey_BuildIndex(t *testing.T) {
 		"N01.02.01.01.": loc{-1, -1, -1, -1},
 		"N01.02.01.02.": loc{4, 4, 4, 4},
 	}
+
+	got := SequentialIndex(orgNodes, dataNodes)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Got %v, expected %v", got, want)
+	}
+
+	got = ConcurrentIndex(orgNodes, dataNodes)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("Got %v, expected %v", got, want)

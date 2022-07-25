@@ -10,12 +10,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
 type Survey struct {
 	schema          Schema
-	index           orgNodeIndex
+	index           OrgNodeIndex
 	answersData     map[string][]int
 	demographicData map[string][]int
 }
@@ -31,7 +32,7 @@ func newLoc() loc {
 	return loc{-1, -1, -1, -1}
 }
 
-type orgNodeIndex map[string]loc
+type OrgNodeIndex map[string]loc
 
 type DataProvider interface {
 	GetData() ([][]string, error)
@@ -66,6 +67,74 @@ func (i InMemoryDataProvider) GetData() ([][]string, error) {
 	return i.Data, nil
 }
 
+type IndexElement struct {
+	OrgNode  string
+	Location loc
+}
+
+func ConcurrentIndex(org OrgStructure, dataNodes []string) OrgNodeIndex {
+	var wg sync.WaitGroup
+	ch := make(chan IndexElement, len(org.nodes))
+
+	calculateIndexElement := func(node string, dataNodes []string, ch chan<- IndexElement, wg *sync.WaitGroup) {
+		defer wg.Done()
+		ch <- calculateLocation(node, dataNodes)
+	}
+
+	for _, node := range org.nodes {
+		wg.Add(1)
+		go calculateIndexElement(node, dataNodes, ch, &wg)
+	}
+
+	wg.Wait()
+	close(ch)
+
+	res := make(map[string]loc)
+
+	for element := range ch {
+		res[element.OrgNode] = element.Location
+	}
+
+	return res
+}
+
+func SequentialIndex(org OrgStructure, dataNodes []string) OrgNodeIndex {
+	res := make(map[string]loc)
+
+	for _, node := range org.nodes {
+		res[node] = calculateLocation(node, dataNodes).Location
+	}
+
+	return res
+}
+
+func calculateLocation(node string, dataNodes []string) IndexElement {
+	l := newLoc()
+	for i, dataNode := range dataNodes {
+		if len(node) > len(dataNode) {
+			continue
+		}
+
+		if node == dataNode[:len(node)] {
+			if l.rollupStart == -1 {
+				l.rollupStart = i
+				l.rollupEnd = i
+			} else {
+				l.rollupEnd++
+			}
+		}
+
+		if node == dataNode {
+			if l.directStart == -1 {
+				l.directStart = i
+				l.directEnd = i
+			} else {
+				l.directEnd++
+			}
+		}
+	}
+	return IndexElement{OrgNode: node, Location: l}
+}
 func buildHeaderColumnMaps(columns []string) map[string]int {
 	nmToIx := map[string]int{}
 
@@ -73,40 +142,6 @@ func buildHeaderColumnMaps(columns []string) map[string]int {
 		nmToIx[col] = i
 	}
 	return nmToIx
-}
-
-func buildIndex(org OrgStructure, dataNodes []string) orgNodeIndex {
-	ixData := map[string]loc{}
-	for _, node := range org.nodes {
-		l := newLoc()
-		for i, dataNode := range dataNodes {
-			if len(node) > len(dataNode) {
-				continue
-			}
-			// rollup match
-			if node == dataNode[:len(node)] {
-				if l.rollupStart == -1 {
-					l.rollupStart = i
-					l.rollupEnd = i
-				} else {
-					l.rollupEnd++
-				}
-			}
-
-			// direct match
-			if node == dataNode {
-				if l.directStart == -1 {
-					l.directStart = i
-					l.directEnd = i
-				} else {
-					l.directEnd++
-				}
-			}
-
-		}
-		ixData[node] = l
-	}
-	return ixData
 }
 
 func sortDataByOrgNode(data [][]string, orgColIx int) ([][]string, error) {
@@ -189,7 +224,12 @@ func parseColumnsData(data [][]string, codes []string, nmToIxMap map[string]int)
 	return parsedData, nil
 }
 
-func NewSurvey(dataProvider DataProvider, s Schema, org OrgStructure) (Survey, error) {
+func NewSurvey(
+	dataProvider DataProvider,
+	s Schema,
+	org OrgStructure,
+	indexFunc func(org OrgStructure, dataNodes []string) OrgNodeIndex,
+) (Survey, error) {
 	lines, err := dataProvider.GetData()
 	if err != nil {
 		return Survey{}, err
@@ -208,7 +248,7 @@ func NewSurvey(dataProvider DataProvider, s Schema, org OrgStructure) (Survey, e
 	}
 
 	ixBuildStart := time.Now()
-	index := buildIndex(org, dataNodes)
+	index := indexFunc(org, dataNodes)
 	log.Printf("Building index took %s\n", time.Since(ixBuildStart))
 
 	demogsStart := time.Now()

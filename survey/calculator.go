@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"sync"
 	"time"
 )
 
@@ -166,4 +167,83 @@ func WorkloadFromJSON(path string) (Workload, error) {
 	}
 
 	return Workload{Cuts: cuts}, nil
+}
+
+type ConcurrentDataProcessor struct {
+	Survey *Survey
+	Schema Schema
+}
+
+func calculateCut(survey *Survey, cut Cut, resChan chan<- CutResult, wg *sync.WaitGroup) {
+	defer wg.Done()
+	schema := survey.schema
+	loc, exists := survey.index[cut.OrgNode]
+	if !exists {
+		resChan <- NewNoMatchResult(schema, cut.Id)
+		return
+	}
+
+	start, end := -1, -1
+	switch cut.Type {
+	case Direct:
+		start = loc.directStart
+		end = loc.directEnd
+	case Rollup:
+		start = loc.rollupStart
+		end = loc.rollupEnd
+	}
+
+	if start == -1 && end == -1 {
+		resChan <- NewNoMatchResult(schema, cut.Id)
+		return
+	}
+
+	counts := EmptyCounts(schema)
+	questions := schema.GetQuestionsCodes()
+	respondents := 0
+	for i := start; i <= end; i++ {
+		eligible := true
+		for k, v := range cut.Demographics {
+			if survey.demographicData[k][i] != v {
+				eligible = false
+			}
+		}
+		if eligible {
+			respondents++
+			for _, qst := range questions {
+				v := survey.answersData[qst][i]
+				if v > -1 {
+					counts[qst][v]++
+				}
+			}
+		}
+	}
+	resChan <- CutResult{
+		Id:          cut.Id,
+		Respondents: respondents,
+		Counts:      counts,
+	}
+}
+
+func (s *ConcurrentDataProcessor) Process(w Workload) []CutResult {
+	startTime := time.Now()
+	resChan := make(chan CutResult, len(w.Cuts))
+	var wg sync.WaitGroup
+
+	for _, cut := range w.Cuts {
+		wg.Add(1)
+		go calculateCut(s.Survey, cut, resChan, &wg)
+
+	}
+
+	wg.Wait()
+	close(resChan)
+
+	res := make([]CutResult, 0)
+
+	for r := range resChan {
+		res = append(res, r)
+	}
+	log.Printf("Workload completed in %s", time.Since(startTime))
+	return res
 }
