@@ -131,3 +131,4 @@ resources/itest_schema.json
 resources/itest_data_*x.csv
 
 *.log
+example_commands.txt

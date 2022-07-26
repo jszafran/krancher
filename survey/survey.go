@@ -235,7 +235,7 @@ func NewSurvey(
 	dataProvider DataProvider,
 	s Schema,
 	org OrgStructure,
-	ib IndexBuilder,
+	indexAlgorithm func(org OrgStructure, dataNodes []string) OrgNodeIndex,
 ) (Survey, error) {
 	lines, err := dataProvider.GetData()
 	if err != nil {
@@ -255,14 +255,8 @@ func NewSurvey(
 	}
 
 	ixBuildStart := time.Now()
-	var ixImpl func(org OrgStructure, dataNodes []string) OrgNodeIndex
-	switch ib {
-	case Concurrent:
-		ixImpl = ConcurrentIndex
-	case Sequential:
-		ixImpl = SequentialIndex
-	}
-	index := ixImpl(org, dataNodes)
+
+	index := indexAlgorithm(org, dataNodes)
 	log.Printf("Building index took %s\n", time.Since(ixBuildStart))
 
 	demogsStart := time.Now()

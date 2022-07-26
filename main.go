@@ -8,21 +8,27 @@ import (
 
 func main() {
 	programStart := time.Now()
-	dataProvider := survey.CSVDataProvider{DataPath: "resources/itest_data_50x.csv"}
-	schema := survey.SchemaFromJSON("resources/itest_schema.json")
-	orgStructure := survey.ReadOrgStructureFromCSV("resources/itest_org.csv", false)
-	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, survey.Concurrent)
+
+	opts, optsErr := survey.GetOpts()
+	if optsErr != nil {
+		log.Fatal(optsErr)
+	}
+
+	dataProvider := survey.CSVDataProvider{DataPath: opts.DataPath}
+	schema := survey.SchemaFromJSON(opts.SchemaPath)
+	orgStructure := survey.ReadOrgStructureFromCSV(opts.OrgStructurePath, false)
+	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, opts.IndexAlgorithm)
 
 	if err != nil {
 		log.Fatalf("failed to create the survey, %s", err)
 	}
 
-	cuts, _ := survey.CutsFromJSON("resources/itest_all_cuts.json")
+	cuts, _ := survey.CutsFromJSON(opts.WorkloadPath)
 	wrkl := survey.Workload{
 		Survey:    &srv,
 		Schema:    survey.Schema{},
 		Cuts:      cuts,
-		Algorithm: survey.ConcurrentCutProcessor,
+		Algorithm: opts.WorkloadAlgorithm,
 	}
 	wrkl.Run()
 	log.Printf("Total program time: %s\n", time.Since(programStart))
