@@ -33,7 +33,7 @@ func main() {
 	res := wrkl.Run()
 
 	writeStartTime := time.Now()
-	err = survey.PersistResults(res, opts.OutputPath)
+	err = opts.ResultsPersistence(res, opts.OutputPath)
 
 	if err != nil {
 		log.Fatal(err)
