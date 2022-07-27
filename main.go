@@ -30,6 +30,15 @@ func main() {
 		Cuts:      cuts,
 		Algorithm: opts.WorkloadAlgorithm,
 	}
-	wrkl.Run()
+	res := wrkl.Run()
+
+	writeStartTime := time.Now()
+	err = survey.PersistResults(res, opts.OutputPath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Results saved successfully (%s)", time.Since(writeStartTime))
 	log.Printf("Total program time: %s\n", time.Since(programStart))
 }

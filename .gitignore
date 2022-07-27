@@ -132,3 +132,4 @@ resources/itest_data_*x.csv
 
 *.log
 example_commands.txt
+results/

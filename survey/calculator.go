@@ -2,6 +2,7 @@ package survey
 
 import (
 	"encoding/json"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"os"
@@ -196,4 +197,14 @@ func CutsFromJSON(path string) ([]Cut, error) {
 	}
 
 	return cuts, nil
+}
+
+func PersistResults(res []CutResult, path string) error {
+	file, err := json.MarshalIndent(res, "", " ")
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(path, file, fs.ModePerm)
+	return err
 }

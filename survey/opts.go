@@ -3,6 +3,9 @@ package survey
 import (
 	"errors"
 	"flag"
+	"fmt"
+	"strings"
+	"time"
 )
 
 type ProgramOpts struct {
@@ -10,16 +13,22 @@ type ProgramOpts struct {
 	SchemaPath        string
 	OrgStructurePath  string
 	WorkloadPath      string
+	OutputPath        string
 	IndexAlgorithm    func(org OrgStructure, dataNodes []string) OrgNodeIndex
 	WorkloadAlgorithm func(cuts []Cut, survey *Survey) []CutResult
 }
 
+func getCurrentTimeResultsFilename() string {
+	return strings.Replace(fmt.Sprintf("%s.json", time.Now().Format(time.RFC3339)[:19]), ":", "", -1)
+
+}
 func GetOpts() (ProgramOpts, error) {
 	var opts ProgramOpts
 	var dataPath string
 	var schemaPath string
 	var orgStructurePath string
 	var workloadPath string
+	var outputPath string
 	var concurrentIndex bool
 	var concurrentWorkload bool
 	var indexImpl func(org OrgStructure, dataNodes []string) OrgNodeIndex
@@ -30,6 +39,7 @@ func GetOpts() (ProgramOpts, error) {
 	flag.StringVar(&workloadPath, "workload", "", "Path to JSON file containing workload definition (cuts).")
 	flag.BoolVar(&concurrentIndex, "concurrent_index", false, "Use concurrency for building the index.")
 	flag.BoolVar(&concurrentWorkload, "concurrent_workload", false, "Use concurrency for processing workload.")
+	flag.StringVar(&outputPath, "output_path", "", "Path to JSON file to which results will be saved")
 	flag.Parse()
 
 	if dataPath == "" {
@@ -46,6 +56,10 @@ func GetOpts() (ProgramOpts, error) {
 
 	if workloadPath == "" {
 		return opts, errors.New("workload path not provided")
+	}
+
+	if outputPath == "" {
+		outputPath = getCurrentTimeResultsFilename()
 	}
 
 	switch concurrentIndex {
@@ -69,5 +83,6 @@ func GetOpts() (ProgramOpts, error) {
 		WorkloadPath:      workloadPath,
 		IndexAlgorithm:    indexImpl,
 		WorkloadAlgorithm: workloadImpl,
+		OutputPath:        outputPath,
 	}, nil
 }
