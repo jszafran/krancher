@@ -1,0 +1,10 @@
+POST http://localhost:8000/workloads
+Content-Type: application/json
+
+{}
+
+###
+GET http://localhost:8000/workloads
+Accept: application/json
+
+

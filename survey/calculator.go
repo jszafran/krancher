@@ -2,6 +2,7 @@ package survey
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -10,13 +11,17 @@ import (
 	"time"
 )
 
-type FilterType string
-
 const (
 	Direct FilterType = "direct"
 	Rollup            = "rollup"
 )
 
+// FilterType defines the type of the filter:
+// direct - you only count respondents that are directly assigned to cut's org node
+// rollup - the same case as direct + you count all child nodes (i.e. N01.01./N01.02. being child nodes of N01.)
+type FilterType string
+
+// Cut describes the filters for which results are calculated: org node + demographic data
 type Cut struct {
 	Id           string         `json:"id"`
 	OrgNode      string         `json:"org_node"`
@@ -25,6 +30,7 @@ type Cut struct {
 }
 
 type QuestionAnswersCounts map[int]int
+type ProcessingAlgorithmFunc func([]Cut, *Survey) []CutResult
 
 type CutResult struct {
 	Id          string
@@ -175,6 +181,20 @@ func ConcurrentCutProcessor(cuts []Cut, survey *Survey) []CutResult {
 	}
 
 	return res
+}
+
+func ProcessingAlgorithmFactory(name string) (ProcessingAlgorithmFunc, error) {
+	var f ProcessingAlgorithmFunc
+	algs := map[string]ProcessingAlgorithmFunc{
+		"sequential": SequentialCutProcessor,
+		"concurrent": ConcurrentCutProcessor,
+	}
+
+	alg, exists := algs[name]
+	if !exists {
+		return f, fmt.Errorf("%s algorithm not supported", name)
+	}
+	return alg, nil
 }
 
 func CutsFromJSON(path string) ([]Cut, error) {
