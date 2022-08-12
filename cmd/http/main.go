@@ -1,21 +1,12 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
-	"time"
 )
 
 func main() {
-	r := Router()
-	addr := "127.0.0.1:8000"
-	srv := &http.Server{
-		Handler:      r,
-		Addr:         addr,
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
-
-	log.Printf("Listening on %s...", addr)
-	log.Fatal(srv.ListenAndServe())
+	r := gin.Default()
+	r.GET("/", WorkloadList)
+	log.Fatal(r.Run(":8000"))
 }

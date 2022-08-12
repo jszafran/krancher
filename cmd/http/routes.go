@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"krancher/survey"
 	"net/http"
 )
@@ -72,13 +72,6 @@ func CreateWorkloadHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "processing request")
 }
 
-func ListWorkloadsHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "listing workloads")
-}
-
-func Router() *mux.Router {
-	r := mux.NewRouter()
-	r.HandleFunc("/workloads", ListWorkloadsHandler).Methods("GET")
-	r.HandleFunc("/workloads", CreateWorkloadHandler).Methods("POST")
-	return r
+func WorkloadList(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "listing workloads"})
 }
