@@ -8,5 +8,6 @@ import (
 func main() {
 	r := gin.Default()
 	r.GET("/", WorkloadList)
+	r.POST("/", WorkloadCreate)
 	log.Fatal(r.Run(":8000"))
 }
