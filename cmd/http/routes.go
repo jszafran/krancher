@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -15,18 +14,13 @@ type WorkloadRequest struct {
 	WorkloadPath     string `json:"workload_path" binding:"required"`
 }
 
-type WorkloadResponse struct {
-	Message string `json:"message"`
-}
-
 func WorkloadCreate(c *gin.Context) {
 	var request WorkloadRequest
-	err := c.BindJSON(&request)
+	err := c.ShouldBindJSON(&request)
 	if err != nil {
-		_ = c.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
 		return
 	}
-	fmt.Printf("%+v\n", request)
 	c.JSON(http.StatusCreated, gin.H{"message": "workload created"})
 }
 
