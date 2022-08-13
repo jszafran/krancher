@@ -6,12 +6,14 @@ import (
 )
 
 type CreateWorkloadRequest struct {
-	Algorithm        string `json:"algorithm" binding:"required"`
 	DataPath         string `json:"data_path" binding:"required"`
-	OutputPath       string `json:"output_path" binding:"required"`
 	SchemaPath       string `json:"schema_path" binding:"required"`
 	OrgStructurePath string `json:"org_structure_path" binding:"required"`
 	WorkloadPath     string `json:"workload_path" binding:"required"`
+	IndexBuilder     string `json:"index_builder" binding:"required"`
+	Processor        string `json:"processor" binding:"required"`
+	OutputPath       string `json:"output_path" binding:"required"`
+	Persistor        string `json:"persistor" binding:"required"`
 }
 
 func WorkloadCreate(c *gin.Context) {
