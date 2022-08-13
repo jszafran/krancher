@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type WorkloadRequest struct {
+type CreateWorkloadRequest struct {
 	Algorithm        string `json:"algorithm" binding:"required"`
 	DataPath         string `json:"data_path" binding:"required"`
 	OutputPath       string `json:"output_path" binding:"required"`
@@ -15,7 +15,7 @@ type WorkloadRequest struct {
 }
 
 func WorkloadCreate(c *gin.Context) {
-	var request WorkloadRequest
+	var request CreateWorkloadRequest
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})

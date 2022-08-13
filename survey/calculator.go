@@ -2,7 +2,6 @@ package survey
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -30,7 +29,9 @@ type Cut struct {
 }
 
 type QuestionAnswersCounts map[int]int
-type ProcessingAlgorithmFunc func([]Cut, *Survey) []CutResult
+type Processor func(cuts []Cut, survey *Survey) []CutResult
+type IndexBuilder func(org OrgStructure, dataNodes []string) OrgNodeIndex
+type Persistor func(res []CutResult, outputPath string) error
 
 type CutResult struct {
 	Id          string
@@ -181,20 +182,6 @@ func ConcurrentCutProcessor(cuts []Cut, survey *Survey) []CutResult {
 	}
 
 	return res
-}
-
-func ProcessingAlgorithmFactory(name string) (ProcessingAlgorithmFunc, error) {
-	var f ProcessingAlgorithmFunc
-	algs := map[string]ProcessingAlgorithmFunc{
-		"sequential": SequentialCutProcessor,
-		"concurrent": ConcurrentCutProcessor,
-	}
-
-	alg, exists := algs[name]
-	if !exists {
-		return f, fmt.Errorf("%s algorithm not supported", name)
-	}
-	return alg, nil
 }
 
 func CutsFromJSON(path string) ([]Cut, error) {

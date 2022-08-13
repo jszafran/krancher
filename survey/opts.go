@@ -8,54 +8,80 @@ import (
 	"time"
 )
 
-type ProgramOpts struct {
-	DataPath           string
-	SchemaPath         string
-	OrgStructurePath   string
-	WorkloadPath       string
-	OutputPath         string
-	IndexAlgorithm     func(org OrgStructure, dataNodes []string) OrgNodeIndex
-	WorkloadAlgorithm  func(cuts []Cut, survey *Survey) []CutResult
-	ResultsPersistence ResultsPersistenceFunc
+type WorkloadOpts struct {
+	DataPath         string
+	SchemaPath       string
+	OrgStructurePath string
+	WorkloadPath     string
+	OutputPath       string
+	IndexBuilder     IndexBuilder
+	Processor        Processor
+	Persistor        Persistor
 }
 
 func getCurrentTimeResultsFilename() string {
 	return strings.Replace(fmt.Sprintf("%s.json", time.Now().Format(time.RFC3339)[:19]), ":", "", -1)
 }
 
-func getPersistenceAlgorithm(algoName string) func(res []CutResult, outputPath string) error {
-	var impl func(res []CutResult, outputPath string) error
-	switch algoName {
-	case "standard":
-		impl = StandardJSONPersistence
-	case "empty_cuts_optimized":
-		impl = EmptyCutOptimizedJSONPersistence
-	default:
-		impl = StandardJSONPersistence
+func ProcessorAlgorithmFactory(algoName string) (Processor, error) {
+	var f Processor
+	algs := map[string]Processor{
+		"sequential": SequentialCutProcessor,
+		"concurrent": ConcurrentCutProcessor,
 	}
-	return impl
+
+	alg, exists := algs[algoName]
+	if !exists {
+		return f, fmt.Errorf("%s processor algorithm not supported", algoName)
+	}
+	return alg, nil
 }
 
-func GetOpts() (ProgramOpts, error) {
-	var opts ProgramOpts
+func PersistenceAlgorithmFactory(algoName string) (Persistor, error) {
+	var f Persistor
+	algs := map[string]Persistor{
+		"standard":               StandardJSONPersistor,
+		"skip_empty_cuts_counts": SkipEmptyCutsCountsJSONPersistor,
+	}
+	alg, exists := algs[algoName]
+	if !exists {
+		return f, fmt.Errorf("%s persistence algorithm not supported", algoName)
+	}
+	return alg, nil
+}
+
+func IndexBuilderAlgorithmFactory(algoName string) (IndexBuilder, error) {
+	var f IndexBuilder
+	algs := map[string]IndexBuilder{
+		"standard":   SequentialIndexBuilder,
+		"concurrent": ConcurrentIndexBuilder,
+	}
+
+	alg, exists := algs[algoName]
+	if !exists {
+		return f, fmt.Errorf("%s index builder algorithm not supported", algoName)
+	}
+	return alg, nil
+}
+
+func GetOpts() (WorkloadOpts, error) {
+	var opts WorkloadOpts
 	var dataPath string
 	var schemaPath string
 	var orgStructurePath string
 	var workloadPath string
 	var outputPath string
-	var concurrentIndex bool
-	var concurrentWorkload bool
-	var indexImpl func(org OrgStructure, dataNodes []string) OrgNodeIndex
-	var workloadImpl func(cuts []Cut, survey *Survey) []CutResult
-	var persistResultsImplName string
+	var indexBuilderAlgName string
+	var processorAlgName string
+	var persistorAlgName string
 	flag.StringVar(&dataPath, "data", "", "Path to CSV with survey data.")
 	flag.StringVar(&schemaPath, "schema", "", "Path to JSON file with survey schema.")
 	flag.StringVar(&orgStructurePath, "org_structure", "", "Path to CSV file with org structure nodes.")
 	flag.StringVar(&workloadPath, "workload", "", "Path to JSON file containing workload definition (cuts).")
-	flag.BoolVar(&concurrentIndex, "concurrent_index", false, "Use concurrency for building the index.")
-	flag.BoolVar(&concurrentWorkload, "concurrent_workload", false, "Use concurrency for processing workload.")
 	flag.StringVar(&outputPath, "output_path", "", "Path to JSON file to which results will be saved.")
-	flag.StringVar(&persistResultsImplName, "persistence_algorithm", "", "Name for the algorithm for results persistence.")
+	flag.StringVar(&indexBuilderAlgName, "index_builder", "", "Name of the index builder algorithm.")
+	flag.StringVar(&processorAlgName, "processor", "", "Name of the processor algorithm.")
+	flag.StringVar(&persistorAlgName, "persistor", "", "Name of the persistor algorithm.")
 	flag.Parse()
 
 	if dataPath == "" {
@@ -78,30 +104,28 @@ func GetOpts() (ProgramOpts, error) {
 		outputPath = getCurrentTimeResultsFilename()
 	}
 
-	switch concurrentIndex {
-	case true:
-		indexImpl = ConcurrentIndex
-	case false:
-		indexImpl = SequentialIndex
+	processor, err := ProcessorAlgorithmFactory(processorAlgName)
+	if err != nil {
+		return opts, err
 	}
 
-	switch concurrentWorkload {
-	case true:
-		workloadImpl = ConcurrentCutProcessor
-	case false:
-		workloadImpl = SequentialCutProcessor
+	indexBuilder, err := IndexBuilderAlgorithmFactory(indexBuilderAlgName)
+	if err != nil {
+		return opts, err
 	}
 
-	persistResultsImpl := getPersistenceAlgorithm(persistResultsImplName)
-
-	return ProgramOpts{
-		DataPath:           dataPath,
-		SchemaPath:         schemaPath,
-		OrgStructurePath:   orgStructurePath,
-		WorkloadPath:       workloadPath,
-		IndexAlgorithm:     indexImpl,
-		WorkloadAlgorithm:  workloadImpl,
-		OutputPath:         outputPath,
-		ResultsPersistence: persistResultsImpl,
+	persistor, err := PersistenceAlgorithmFactory(persistorAlgName)
+	if err != nil {
+		return opts, err
+	}
+	return WorkloadOpts{
+		DataPath:         dataPath,
+		SchemaPath:       schemaPath,
+		OrgStructurePath: orgStructurePath,
+		WorkloadPath:     workloadPath,
+		IndexBuilder:     indexBuilder,
+		Processor:        processor,
+		OutputPath:       outputPath,
+		Persistor:        persistor,
 	}, nil
 }

@@ -6,10 +6,8 @@ import (
 	"io/ioutil"
 )
 
-type ResultsPersistenceFunc func(res []CutResult, outputPath string) error
-
-// StandardJSONPersistence full JSON - no optimization
-func StandardJSONPersistence(res []CutResult, outputPath string) error {
+// StandardJSONPersistor full JSON - no optimization
+func StandardJSONPersistor(res []CutResult, outputPath string) error {
 	file, err := json.MarshalIndent(res, "", " ")
 	if err != nil {
 		return err
@@ -19,8 +17,8 @@ func StandardJSONPersistence(res []CutResult, outputPath string) error {
 	return err
 }
 
-// EmptyCutOptimizedJSONPersistence counts for cuts with 0 respondents are not included in the JSON
-func EmptyCutOptimizedJSONPersistence(res []CutResult, outputPath string) error {
+// SkipEmptyCutsCountsJSONPersistor counts for cuts with 0 respondents are not included in the JSON
+func SkipEmptyCutsCountsJSONPersistor(res []CutResult, outputPath string) error {
 	resOpt := make([]CutResult, 0)
 	for _, r := range res {
 		if r.Respondents == 0 {
@@ -34,5 +32,5 @@ func EmptyCutOptimizedJSONPersistence(res []CutResult, outputPath string) error 
 		resOpt = append(resOpt, r)
 	}
 
-	return StandardJSONPersistence(resOpt, outputPath)
+	return StandardJSONPersistor(resOpt, outputPath)
 }

@@ -41,7 +41,7 @@ func TestSynchronousDataProcessor_Process(t *testing.T) {
 		{"D1", "D1", 1, 6, true, Demography},
 		{"D2", "D2", 1, 6, true, Demography},
 	}}
-	srv, _ := NewSurvey(dp, sch, org, SequentialIndex)
+	srv, _ := NewSurvey(dp, sch, org, SequentialIndexBuilder)
 	emptyDemog := make(map[string]int)
 	cuts := []Cut{
 		{Id: "C1", Type: Rollup, OrgNode: "N01.01.", Demographics: emptyDemog},

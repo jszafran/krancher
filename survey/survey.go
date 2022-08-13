@@ -28,11 +28,11 @@ type loc struct {
 	directEnd   int
 }
 
-type IndexBuilder string
+type IndexBuilderType string
 
 const (
-	Concurrent IndexBuilder = "concurrent"
-	Sequential              = "sequential"
+	Concurrent IndexBuilderType = "concurrent"
+	Sequential                  = "sequential"
 )
 
 func newLoc() loc {
@@ -79,7 +79,7 @@ type IndexElement struct {
 	Location loc
 }
 
-func ConcurrentIndex(org OrgStructure, dataNodes []string) OrgNodeIndex {
+func ConcurrentIndexBuilder(org OrgStructure, dataNodes []string) OrgNodeIndex {
 	var wg sync.WaitGroup
 	ch := make(chan IndexElement, len(org.nodes))
 
@@ -105,7 +105,7 @@ func ConcurrentIndex(org OrgStructure, dataNodes []string) OrgNodeIndex {
 	return res
 }
 
-func SequentialIndex(org OrgStructure, dataNodes []string) OrgNodeIndex {
+func SequentialIndexBuilder(org OrgStructure, dataNodes []string) OrgNodeIndex {
 	res := make(map[string]loc)
 
 	for _, node := range org.nodes {

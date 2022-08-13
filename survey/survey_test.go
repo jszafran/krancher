@@ -32,13 +32,13 @@ func TestSurvey_IndexFuncs(t *testing.T) {
 		"N01.02.01.02.": loc{4, 4, 4, 4},
 	}
 
-	got := SequentialIndex(orgNodes, dataNodes)
+	got := SequentialIndexBuilder(orgNodes, dataNodes)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("Got %v, expected %v", got, want)
 	}
 
-	got = ConcurrentIndex(orgNodes, dataNodes)
+	got = ConcurrentIndexBuilder(orgNodes, dataNodes)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("Got %v, expected %v", got, want)

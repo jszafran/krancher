@@ -17,7 +17,7 @@ func main() {
 	dataProvider := survey.CSVDataProvider{DataPath: opts.DataPath}
 	schema := survey.SchemaFromJSON(opts.SchemaPath)
 	orgStructure := survey.ReadOrgStructureFromCSV(opts.OrgStructurePath, false)
-	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, opts.IndexAlgorithm)
+	srv, err := survey.NewSurvey(dataProvider, schema, orgStructure, opts.IndexBuilder)
 
 	if err != nil {
 		log.Fatalf("failed to create the survey, %s", err)
@@ -28,12 +28,12 @@ func main() {
 		Survey:    &srv,
 		Schema:    survey.Schema{},
 		Cuts:      cuts,
-		Algorithm: opts.WorkloadAlgorithm,
+		Algorithm: opts.Processor,
 	}
 	res := wrkl.Run()
 
 	writeStartTime := time.Now()
-	err = opts.ResultsPersistence(res, opts.OutputPath)
+	err = opts.Persistor(res, opts.OutputPath)
 
 	if err != nil {
 		log.Fatal(err)
