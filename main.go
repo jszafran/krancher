@@ -9,7 +9,7 @@ import (
 func main() {
 	programStart := time.Now()
 
-	opts, optsErr := survey.GetOpts()
+	opts, optsErr := survey.ParseOpts()
 	if optsErr != nil {
 		log.Fatal(optsErr)
 	}

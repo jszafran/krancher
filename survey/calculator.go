@@ -91,6 +91,9 @@ func EmptyCounts(sch Schema) map[string]QuestionAnswersCounts {
 	return counts
 }
 
+// NewNoMatchResult returns results for empty cut
+// (when no respondents were eligible for given
+// org node and demographic criteria)
 func NewNoMatchResult(sch Schema, id string) CutResult {
 	counts := EmptyCounts(sch)
 	return CutResult{

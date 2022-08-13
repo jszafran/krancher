@@ -23,6 +23,7 @@ func getCurrentTimeResultsFilename() string {
 	return strings.Replace(fmt.Sprintf("%s.json", time.Now().Format(time.RFC3339)[:19]), ":", "", -1)
 }
 
+// ProcessorAlgorithmFactory returns a processing algorithm by given name.
 func ProcessorAlgorithmFactory(algoName string) (Processor, error) {
 	var f Processor
 	algs := map[string]Processor{
@@ -37,6 +38,7 @@ func ProcessorAlgorithmFactory(algoName string) (Processor, error) {
 	return alg, nil
 }
 
+// PersistenceAlgorithmFactory returns a persistence algorithm by given name.
 func PersistenceAlgorithmFactory(algoName string) (Persistor, error) {
 	var f Persistor
 	algs := map[string]Persistor{
@@ -50,6 +52,7 @@ func PersistenceAlgorithmFactory(algoName string) (Persistor, error) {
 	return alg, nil
 }
 
+// IndexBuilderAlgorithmFactory returns an index builder algorithm by given name.
 func IndexBuilderAlgorithmFactory(algoName string) (IndexBuilder, error) {
 	var f IndexBuilder
 	algs := map[string]IndexBuilder{
@@ -64,7 +67,8 @@ func IndexBuilderAlgorithmFactory(algoName string) (IndexBuilder, error) {
 	return alg, nil
 }
 
-func GetOpts() (WorkloadOpts, error) {
+// ParseOpts parses command line arguments and returns them as a struct.
+func ParseOpts() (WorkloadOpts, error) {
 	var opts WorkloadOpts
 	var dataPath string
 	var schemaPath string
